@@ -1,0 +1,345 @@
+(function () {
+  "use strict";
+
+  // Animation state tracking
+  const animationState = new Map();
+  const pulseAnimations = {};
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const mapSection = document.querySelector(".dreamlab-map-section");
+    if (!mapSection) return;
+
+    initializeControls(mapSection);
+    initializePulseAnimations();
+    initializeMapAreas();
+  });
+
+  function initializeControls(mapSection) {
+    const controlItems = mapSection.querySelectorAll(".nav-control-item");
+    
+    controlItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        controlItems.forEach((i) => i.classList.remove("active"));
+        item.classList.add("active");
+      });
+    });
+  }
+
+  function initializePulseAnimations() {
+    // Create default pulsing animations with stagger
+    gsap.utils.toArray(".indicator .circle-puls").forEach((circle, i) => {
+      pulseAnimations[i] = gsap.to(circle, {
+        scale: 2,
+        opacity: 0,
+        duration: 1.2,
+        repeat: -1,
+        transformOrigin: "center center",
+        delay: i * 0.3,
+        ease: "power2.out"
+      });
+    });
+  }
+
+  function initializeMapAreas() {
+    document.querySelectorAll(".zone-area").forEach((area, index) => {
+      const elements = getAreaElements(area);
+      if (!elements) return;
+
+      setupInitialStates(elements, index);
+      attachEventListeners(area, elements, index);
+    });
+  }
+
+  function getAreaElements(area) {
+    const path = area.querySelector("path");
+    const circlePuls = area.querySelector(".circle-puls");
+    const baseCircle = area.querySelector(".circle");
+    const plusIcon = area.querySelector(".plus-icon");
+    const zoomableCircle = area.querySelector(".circle-zoom");
+    const text = area.querySelector(".text");
+    const lines = area.querySelectorAll("line");
+
+    // Return null if essential elements are missing
+    if (!path || !baseCircle || !zoomableCircle) {
+      console.warn("Essential elements missing in zone-area", area);
+      return null;
+    }
+
+    return {
+      path,
+      circlePuls,
+      baseCircle,
+      plusIcon,
+      zoomableCircle,
+      text,
+      lines
+    };
+  }
+
+  function setupInitialStates(elements, index) {
+    const { zoomableCircle, text, lines } = elements;
+
+    // Set initial states
+    gsap.set(zoomableCircle, {
+      scale: 0,
+      transformOrigin: "center center"
+    });
+
+    if (text) {
+      gsap.set(text, {
+        opacity: 0,
+        rotation: 0
+      });
+    }
+
+    if (lines.length > 0) {
+      gsap.set(lines, {
+        strokeDashoffset: 12
+      });
+    }
+
+    // Initialize animation state
+    animationState.set(index, {
+      isHovered: false,
+      activeAnimations: []
+    });
+  }
+
+  function attachEventListeners(area, elements, index) {
+    let hoverTimeout;
+
+    area.addEventListener("mouseenter", function() {
+      // Clear any pending leave animations
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+
+      // Prevent animation conflicts
+      if (animationState.get(index)?.isHovered) return;
+
+      handleMouseEnter(elements, index);
+    });
+
+    area.addEventListener("mouseleave", function() {
+      // Small delay to prevent flickering on quick mouse movements
+      hoverTimeout = setTimeout(() => {
+        handleMouseLeave(elements, index);
+      }, 50);
+    });
+  }
+
+  function handleMouseEnter(elements, index) {
+    const state = animationState.get(index);
+    state.isHovered = true;
+
+    // Kill all existing animations for this area
+    killAreaAnimations(elements, index);
+
+    const { path, text, lines, plusIcon, baseCircle, zoomableCircle } = elements;
+
+    // Apply fill effect
+    if (path && path.id) {
+      path.setAttribute("fill", `url(#${path.id}-img)`);
+    }
+
+    // Create enter animations
+    const enterAnimations = [];
+
+    if (text) {
+      enterAnimations.push(
+        gsap.to(text, {
+          opacity: 1,
+          duration: 0.4,
+          ease: "power2.out"
+        }),
+        gsap.to(text, {
+          rotation: "+=360",
+          duration: 8,
+          repeat: -1,
+          ease: "none",
+          transformOrigin: "center center"
+        })
+      );
+    }
+
+    if (lines.length > 0) {
+      lines.forEach((line) => {
+        enterAnimations.push(
+          gsap.to(line, {
+            strokeDashoffset: 0,
+            duration: 0.4,
+            ease: "power2.out"
+          })
+        );
+      });
+    }
+
+    if (plusIcon) {
+      enterAnimations.push(
+        gsap.to(plusIcon, {
+          rotation: -90,
+          duration: 0.5,
+          ease: "power2.out",
+          transformOrigin: "center center"
+        })
+      );
+    }
+
+    enterAnimations.push(
+      gsap.to(baseCircle, {
+        scale: 0,
+        duration: 0.2,
+        ease: "power2.out",
+        transformOrigin: "center center"
+      }),
+      gsap.to(zoomableCircle, {
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(1.7)",
+        transformOrigin: "center center"
+      })
+    );
+
+    // Store animations for cleanup
+    state.activeAnimations = enterAnimations;
+  }
+
+  function handleMouseLeave(elements, index) {
+    const state = animationState.get(index);
+    if (!state.isHovered) return;
+
+    state.isHovered = false;
+
+    // Kill all existing animations for this area
+    killAreaAnimations(elements, index);
+
+    const { path, text, lines, plusIcon, baseCircle, zoomableCircle } = elements;
+
+    // Remove fill effect
+    if (path) {
+      path.setAttribute("fill", "none");
+    }
+
+    // Create leave animations
+    const leaveAnimations = [];
+
+    if (text) {
+      leaveAnimations.push(
+        gsap.to(text, {
+          opacity: 0,
+          duration: 0.2,
+          ease: "power2.out"
+        }),
+        gsap.set(text, {
+          rotation: 0,
+          delay: 0.2
+        })
+      );
+    }
+
+    if (lines.length > 0) {
+      lines.forEach((line) => {
+        leaveAnimations.push(
+          gsap.to(line, {
+            strokeDashoffset: 12,
+            duration: 0.3,
+            ease: "power2.out"
+          })
+        );
+      });
+    }
+
+    if (plusIcon) {
+      leaveAnimations.push(
+        gsap.to(plusIcon, {
+          rotation: 0,
+          duration: 0.3,
+          ease: "power2.out",
+          transformOrigin: "center center"
+        })
+      );
+    }
+
+    leaveAnimations.push(
+      gsap.to(zoomableCircle, {
+        scale: 0,
+        duration: 0.2,
+        ease: "power2.out",
+        transformOrigin: "center center"
+      }),
+      gsap.to(baseCircle, {
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(1.7)",
+        transformOrigin: "center center",
+        delay: 0.1
+      })
+    );
+
+    // Store animations for cleanup
+    state.activeAnimations = leaveAnimations;
+  }
+
+  function killAreaAnimations(elements, index) {
+    const state = animationState.get(index);
+    
+    // Kill stored animations
+    if (state.activeAnimations) {
+      state.activeAnimations.forEach(animation => {
+        if (animation && animation.kill) {
+          animation.kill();
+        }
+      });
+      state.activeAnimations = [];
+    }
+
+    // Kill any animations on specific elements
+    const { text, lines, plusIcon, baseCircle, zoomableCircle } = elements;
+    
+    gsap.killTweensOf([text, plusIcon, baseCircle, zoomableCircle]);
+    
+    if (lines.length > 0) {
+      gsap.killTweensOf(lines);
+    }
+  }
+
+  // Utility function for color contrast (if needed)
+  function getContrastColor(hex) {
+    if (!hex || hex.length !== 7) return "#fbe9ba";
+    
+    const r = parseInt(hex.substr(1, 2), 16);
+    const g = parseInt(hex.substr(3, 2), 16);
+    const b = parseInt(hex.substr(5, 2), 16);
+    
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? "#fbe9ba" : "white";
+  }
+
+  // Cleanup function (call this if you need to destroy the map)
+  function cleanup() {
+    // Kill all pulse animations
+    Object.values(pulseAnimations).forEach(animation => {
+      if (animation && animation.kill) {
+        animation.kill();
+      }
+    });
+
+    // Kill all area animations
+    animationState.forEach((state, index) => {
+      if (state.activeAnimations) {
+        state.activeAnimations.forEach(animation => {
+          if (animation && animation.kill) {
+            animation.kill();
+          }
+        });
+      }
+    });
+
+    // Clear state
+    animationState.clear();
+  }
+
+  // Export cleanup function if needed
+  window.mapAnimationCleanup = cleanup;
+})();
