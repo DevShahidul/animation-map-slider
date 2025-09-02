@@ -112,8 +112,8 @@
     }
     .map{
         max-width: 100%;
-        position: relative;
-        z-index: 99;
+        /* position: relative; */
+        /* z-index: 99; */
         svg{
             width: 100%;
             height: auto;
@@ -127,15 +127,16 @@
         }
         .zone-area{
             cursor: pointer;
+            pointer-events: auto;
         }
 
-         path {
-            transition: fill 0.3s ease;
-         }
+        .zone-area path {
+            pointer-events: auto;
+        }
 
-         .zone-area path{
+         /* .zone-area path{
             cursor: pointer;
-         }
+         } */
 
         .indicator line {
         stroke: #0b3d2e;

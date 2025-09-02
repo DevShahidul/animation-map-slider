@@ -18,11 +18,100 @@
     const controlItems = mapSection.querySelectorAll(".nav-control-item");
     
     controlItems.forEach((item) => {
+      // Setup initial states for indicators
+      // setupControlIndicators(item);  // For now don't need because I have added animation with css
+      
       item.addEventListener("click", () => {
-        controlItems.forEach((i) => i.classList.remove("active"));
-        item.classList.add("active");
+        activateControlItem(item, controlItems);
+        
+        // Optional: Focus corresponding map area
+        const areaId = item.getAttribute("data-area");
+        focusMapArea(areaId);
       });
     });
+  }
+
+  function setupControlIndicators(controlItem) {
+    const indicators = controlItem.querySelectorAll(".indecators span");
+    
+    if (indicators.length > 0) {
+      gsap.set(indicators, {
+        scaleX: 0,
+        transformOrigin: "right center",
+        opacity: 0.6
+      });
+
+      // Animate active state if item has active class
+      if (controlItem.classList.contains("active")) {
+        animateControlIndicators(indicators, true);
+      }
+    }
+  }
+
+  function activateControlItem(activeItem, allItems) {
+    // Remove active class and animate indicators out
+    allItems.forEach((item) => {
+      item.classList.remove("active");
+      // const indicators = item.querySelectorAll(".indecators span");  // For now don't need to do this because I have added animation with css
+      // animateControlIndicators(indicators, false);
+    });
+
+    // Add active class and animate indicators in
+    activeItem.classList.add("active");
+    // const activeIndicators = activeItem.querySelectorAll(".indecators span"); // For now don't need to do this because I have added animation with css
+    // animateControlIndicators(activeIndicators, true);
+  }
+
+  function animateControlIndicators(indicators, isActive) {
+    if (indicators.length === 0) return;
+
+    if (isActive) {
+      gsap.to(indicators, {
+        scaleX: 1,
+        opacity: 1,
+        duration: 0.4,
+        stagger: 0.1,
+        ease: "power2.out"
+      });
+    } else {
+      gsap.to(indicators, {
+        scaleX: 0,
+        opacity: 0.6,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    }
+  }
+
+  function activateNavControl(pathElement) {
+    if (!pathElement || !pathElement.id) return;
+
+    const areaId = pathElement.id;
+    const controlItem = document.querySelector(`[data-area="${areaId}"]`);
+    
+    if (controlItem) {
+      const allControlItems = document.querySelectorAll(".nav-control-item");
+      activateControlItem(controlItem, allControlItems);
+    }
+  }
+
+  function focusMapArea(areaId) {
+    if (!areaId) return;
+
+    const targetArea = document.querySelector(`#${areaId}`);
+    if (targetArea) {
+      // Optional: Add visual focus effect or scroll to area
+      const areaGroup = targetArea.closest(".zone-area");
+      if (areaGroup) {
+        // Trigger hover effect programmatically
+        areaGroup.dispatchEvent(new Event("mouseenter"));
+        
+        // Auto-remove focus after delay
+        setTimeout(() => {
+          areaGroup.dispatchEvent(new Event("mouseleave"));
+        }, 2000);
+      }
+    }
   }
 
   function initializePulseAnimations() {
@@ -118,6 +207,9 @@
       // Prevent animation conflicts
       if (animationState.get(index)?.isHovered) return;
 
+      // Activate corresponding nav control
+      activateNavControl(elements.path);
+
       handleMouseEnter(elements, index);
     });
 
@@ -155,7 +247,7 @@
         }),
         gsap.to(text, {
           rotation: "+=360",
-          duration: 8,
+          duration: 25,
           repeat: -1,
           ease: "none",
           transformOrigin: "center center"
@@ -336,10 +428,19 @@
       }
     });
 
+    // Kill all control animations
+    const allIndicators = document.querySelectorAll(".indecators span");
+    gsap.killTweensOf(allIndicators);
+
     // Clear state
     animationState.clear();
   }
 
-  // Export cleanup function if needed
-  window.mapAnimationCleanup = cleanup;
+  // Public API
+  window.InteractiveMap = {
+    cleanup,
+    activateNavControl,
+    focusMapArea,
+    getContrastColor
+  };
 })();
