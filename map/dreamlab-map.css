@@ -112,13 +112,10 @@
     }
     .map{
         max-width: 100%;
-        /* position: relative; */
-        /* z-index: 99; */
         svg{
             width: 100%;
             height: auto;
             path{
-                /* fill: transparent; */
                 stroke: white;
             }
             .textpath-circle{
@@ -127,21 +124,30 @@
         }
         .zone-area{
             cursor: pointer;
-            pointer-events: auto;
         }
 
-        .zone-area path {
-            pointer-events: auto;
-        }
+         path {
+            transition: fill 0.3s ease;
+         }
 
-         /* .zone-area path{
-            cursor: pointer;
-         } */
-
+         .indicator{
+            min-width: 100px;
+            min-height: 100px;
+            aspect-ratio: 1;
+            z-index: 99;
+            .circle-zoom{
+                cursor: grab;
+                position: relative;
+                z-index: 9;
+            }
+         }
         .indicator line {
-        stroke: #0b3d2e;
+        stroke: var(--dreamlab-map-section-bg);
         stroke-width: 2;
         stroke-linecap: round;
+      }
+      .indicator .plus-icon {
+        pointer-events: none;
       }
       .indicator .text {
         font-size: 0.75rem;
