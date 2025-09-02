@@ -157,6 +157,10 @@
         text-transform: uppercase;
       }
     }
+    .btn-close-slider{
+        width: 5rem;
+        transform: translateY(-10rem);
+    }
 }
 
 @media screen and (min-width: 64rem) {

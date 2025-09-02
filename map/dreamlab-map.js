@@ -12,7 +12,17 @@
     initializeControls(mapSection);
     initializePulseAnimations();
     initializeMapAreas();
+    initializeSliderControls();
   });
+
+  function initializeSliderControls() {
+    const closeButton = document.querySelector("#btn-close-slider");
+    if (!closeButton) return;
+
+    closeButton.addEventListener("click", function(e) {
+      animateSlider(false); // Close the slider
+    });
+  }
 
   function initializeControls(mapSection) {
     const controlItems = mapSection.querySelectorAll(".nav-control-item");
@@ -138,6 +148,77 @@
 
       setupInitialStates(elements, index);
       attachEventListeners(area, elements, index);
+      setupIndicatorClickHandler(area);
+    });
+  }
+
+  function animateSlider(shouldOpen = true) {
+    const mapSection = document.querySelector(".dreamlab-map-section");
+    const mapArea = mapSection.querySelector(".map-area");
+    const sliderArea = mapSection.querySelector(".slider-area");
+    const closeButton = document.querySelector("#btn-close-slider");
+
+    if (!mapArea || !sliderArea) return;
+
+    // Create timeline for synchronized animations
+    const tl = gsap.timeline({
+      defaults: { 
+        duration: 1,
+        ease: "power3.inOut"
+      }
+    });
+
+    if (shouldOpen) {
+      // Open slider with parallax effect
+      tl.to(sliderArea, {
+        x: "0%",
+        ease: "power3.inOut"
+      })
+      .to(mapArea, {
+        x: "-12.5rem",
+        ease: "power3.inOut"
+      }, "<+=0.15") // Start slightly after slider, creates parallax effect
+      .to(closeButton, {
+        y: "0",
+        duration: 0.6,
+        ease: "back.out(1.7)"
+      }, "<+=0.3"); // Start after slider movement begins, with bouncy effect
+
+      sliderArea.classList.add('active');
+    } else {
+      // Close slider with parallax effect
+      tl.to(closeButton, {
+        y: "-10rem",
+        duration: 0.4,
+        ease: "power2.in"
+      })
+      .to(sliderArea, {
+        x: "100%",
+        ease: "power3.inOut"
+      }, "<+=0.2") // Start after button starts moving
+      .to(mapArea, {
+        x: "0%",
+        ease: "power3.inOut"
+      }, "<+=0.15"); // Start slightly after slider, creates parallax effect
+
+      sliderArea.classList.remove('active');
+    }
+
+    return tl;
+  }
+
+  function setupIndicatorClickHandler(area) {
+    const indicator = area.querySelector('.indicator');
+    if (!indicator) return;
+
+    indicator.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      const sliderArea = document.querySelector(".slider-area");
+      const isOpen = sliderArea?.classList.contains('active');
+      
+      // Toggle the slider state
+      animateSlider(!isOpen);
     });
   }
 
