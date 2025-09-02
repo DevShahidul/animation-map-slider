@@ -112,12 +112,17 @@
     }
     .map{
         max-width: 100%;
+        position: relative;
+        z-index: 99;
         svg{
             width: 100%;
             height: auto;
             path{
                 /* fill: transparent; */
                 stroke: white;
+            }
+            .textpath-circle{
+                stroke: none;
             }
         }
         .zone-area{
@@ -126,6 +131,10 @@
 
          path {
             transition: fill 0.3s ease;
+         }
+
+         .zone-area path{
+            cursor: pointer;
          }
 
         .indicator line {
