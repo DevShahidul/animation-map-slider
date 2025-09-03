@@ -4,6 +4,8 @@
   // Animation state tracking
   const animationState = new Map();
   const pulseAnimations = {};
+  const colorGreen = "#0b3d2a";
+  const colorCreem = "#fbe9ba";
 
   document.addEventListener("DOMContentLoaded", () => {
     const mapSection = document.querySelector(".dreamlab-map-section");
@@ -17,10 +19,13 @@
 
   function initializeSliderControls() {
     const closeButton = document.querySelector("#btn-close-slider");
+    const body = document.querySelector("body");
     if (!closeButton) return;
 
-    closeButton.addEventListener("click", function(e) {
+    closeButton.addEventListener("click", function (e) {
       animateSlider(false); // Close the slider
+      body.style.paddingRight = '';
+      body.style.overflowY = "auto";
     });
   }
 
@@ -77,15 +82,16 @@
 
     if (isActive) {
       gsap.to(indicators, {
-        scaleX: 1,
+        // scaleX: 1,
         opacity: 1,
-        duration: 0.5,
-        stagger: 0.1,
+        duration: 0.8,
+        // stagger: 0.1,
         ease: "power2.out",
+        transformOrigin: "right center",
       });
     } else {
       gsap.to(indicators, {
-        scaleX: 0,
+        // scaleX: 0.5,
         opacity: 0.6,
         duration: 0.3,
         ease: "power2.out",
@@ -148,8 +154,48 @@
 
       setupInitialStates(elements, index);
       attachEventListeners(area, elements, index);
-      setupIndicatorClickHandler(area);
+      setupIndicatorClickHandler(area, index);
     });
+  }
+
+  function initializeAreasData() {
+    return [
+        {
+          areaName: "Midwest",
+          areaImage: "https://picsum.photos/id/1043/800/400",
+          guideImage: "https://picsum.photos/id/1011/100/100",
+          climateInfo: "Hot summers, cold winters",
+          description: "The heartland of the United States.",
+        },
+        {
+          areaName: "Canada West",
+          areaImage: "https://picsum.photos/id/1015/800/400",
+          guideImage: "https://picsum.photos/id/1005/100/100",
+          climateInfo: "Cold winters, mild summers",
+          description: "Explore the beauty of Western Canada.",
+        },
+        {
+          areaName: "Canada East",
+          areaImage: "https://picsum.photos/id/1021/800/400",
+          guideImage: "https://picsum.photos/id/1001/100/100",
+          climateInfo: "Humid summers, snowy winters",
+          description: "Discover Eastern Canada's rich culture.",
+        },
+        {
+          areaName: "US West",
+          areaImage: "https://picsum.photos/id/1035/800/400",
+          guideImage: "https://picsum.photos/id/1006/100/100",
+          climateInfo: "Warm, dry climate",
+          description: "From California beaches to Nevada deserts.",
+        },
+        {
+          areaName: "US East",
+          areaImage: "https://picsum.photos/id/1052/800/400",
+          guideImage: "https://picsum.photos/id/1012/100/100",
+          climateInfo: "Mild climate with four seasons",
+          description: "Home to New York, Washington D.C., and Boston.",
+        },
+      ];
   }
 
   function animateSlider(shouldOpen = true) {
@@ -162,63 +208,87 @@
 
     // Create timeline for synchronized animations
     const tl = gsap.timeline({
-      defaults: { 
+      defaults: {
         duration: 1,
-        ease: "power3.inOut"
-      }
+        ease: "power3.inOut",
+      },
     });
 
     if (shouldOpen) {
       // Open slider with parallax effect
-      tl.to(sliderArea, {
+      gsap.to(sliderArea, {
         x: "0%",
-        ease: "power3.inOut"
+        duration: 1.5,
+        ease: "power3.inOut",
       })
-      .to(mapArea, {
-        x: "-12.5rem",
-        ease: "power3.inOut"
-      }, "<+=0.15") // Start slightly after slider, creates parallax effect
-      .to(closeButton, {
-        y: "0",
-        duration: 0.6,
-        ease: "back.out(1.7)"
-      }, "<+=0.3"); // Start after slider movement begins, with bouncy effect
+      tl.to(
+          mapArea,
+          {
+            x: "-32%",
+            duration: 1.9,
+            ease: "power3.inOut",
+          },
+          "<+=0.15"
+        ) // Start slightly after slider, creates parallax effect
+        .to(
+          closeButton,
+          {
+            y: "0",
+            duration: 0.6,
+            ease: "back.out(1.7)",
+          },
+          "<+=0.3"
+        ); // Start after slider movement begins, with bouncy effect
 
-      sliderArea.classList.add('active');
+      sliderArea.classList.add("active");
     } else {
       // Close slider with parallax effect
       tl.to(closeButton, {
         y: "-10rem",
         duration: 0.4,
-        ease: "power2.in"
+        ease: "power2.in",
       })
-      .to(sliderArea, {
-        x: "100%",
-        ease: "power3.inOut"
-      }, "<+=0.2") // Start after button starts moving
-      .to(mapArea, {
-        x: "0%",
-        ease: "power3.inOut"
-      }, "<+=0.15"); // Start slightly after slider, creates parallax effect
+        .to(
+          sliderArea,
+          {
+            x: "100%",
+            ease: "power3.inOut",
+          },
+          "<+=0.2"
+        ) // Start after button starts moving
+        .to(
+          mapArea,
+          {
+            x: "0%",
+            ease: "power3.inOut",
+          },
+          "<+=0.15"
+        ); // Start slightly after slider, creates parallax effect
 
-      sliderArea.classList.remove('active');
+      sliderArea.classList.remove("active");
     }
 
     return tl;
   }
 
-  function setupIndicatorClickHandler(area) {
-    const indicator = area.querySelector('.indicator');
+  function setupIndicatorClickHandler(area, index) {
+    const indicator = area.querySelector(".indicator");
     if (!indicator) return;
 
-    indicator.addEventListener('click', function(e) {
+    const elements = getAreaElements(area);
+
+    indicator.addEventListener("click", function (e) {
       e.stopPropagation();
-      
+      handleMouseLeave(elements, index);
+      const body = document.querySelector("body");
       const sliderArea = document.querySelector(".slider-area");
-      const isOpen = sliderArea?.classList.contains('active');
-      
+      const isOpen = sliderArea?.classList.contains("active");
+      const scrollbarWidth = getScrollbarWidth();
       // Toggle the slider state
       animateSlider(!isOpen);
+
+      body.style.paddingRight = `${scrollbarWidth}px`;
+      body.style.overflow = "hidden";
     });
   }
 
@@ -311,7 +381,10 @@
     area.addEventListener("mouseleave", function (e) {
       // Check if we're moving to the indicator
       const toElement = e.relatedTarget;
-      if (toElement && (toElement.closest('.indicator') === area.querySelector('.indicator'))) {
+      if (
+        toElement &&
+        toElement.closest(".indicator") === area.querySelector(".indicator")
+      ) {
         return;
       }
 
@@ -325,7 +398,6 @@
     });
 
     // Additional hover events for indicator
-    const indicator = area.querySelector(".indicator");
     if (zoomableCircle) {
       zoomableCircle.addEventListener("mouseenter", function (e) {
         e.stopPropagation(); // Prevent event bubbling
@@ -345,13 +417,13 @@
         // Always scale up and change color when hovering indicator
         gsap.to(zoomableCircle, {
           scale: 2,
-          duration: 0.3,
-          ease: "back.out(1.7)",
-          transformOrigin: "center center"
+          duration: 0.4,
+          ease: "power2.out",
+          transformOrigin: "center center",
         });
 
         if (text) {
-          text.style.fill = "#0b3d2a"; // Change to the dark green color
+          text.style.fill = colorGreen; // Change to the dark green color
         }
       });
 
@@ -361,16 +433,16 @@
 
         // Check if we're moving to another part of the same area
         const toElement = e.relatedTarget;
-        if (toElement && toElement.closest('.zone-area') === area) {
+        if (toElement && toElement.closest(".zone-area") === area) {
           gsap.to(zoomableCircle, {
             scale: 1,
-            duration: 0.3,
-            ease: "back.out(1.7)",
-            transformOrigin: "center center"
+            duration: 0.4,
+            ease: "power2.out",
+            transformOrigin: "center center",
           });
 
           if (text) {
-            text.style.fill = "#fbe9ba"; // Restore original color
+            text.style.fill = colorCreem; // Restore original color
           }
           return;
         }
@@ -396,6 +468,7 @@
       const bbox = path.getBBox();
       const patternId = `${path.id}-img`;
       const pattern = document.getElementById(patternId);
+      // const patternImg = document.getElementById(`${path.id}-clip-img`);
 
       if (pattern) {
         // Calculate scale to fit the path's bounding box
@@ -405,6 +478,11 @@
           "patternTransform",
           `translate(${bbox.x},${bbox.y}) scale(${scale})`
         );
+        // patternImg.setAttribute(
+        //   "transform",
+        //   `translate(${bbox.x},${bbox.y}) scale(${scale})`
+        // );
+        
         path.setAttribute("fill", `url(#${patternId})`);
       }
     }
@@ -434,8 +512,8 @@
         enterAnimations.push(
           gsap.to(line, {
             strokeDashoffset: 0,
-            duration: 0.4,
-            ease: "power2.out",
+            duration: 0.5,
+            ease: "power3.out",
           })
         );
       });
@@ -446,7 +524,7 @@
         gsap.to(plusIcon, {
           rotation: -90,
           duration: 0.5,
-          ease: "power2.out",
+          ease: "power3.out",
           transformOrigin: "center center",
         })
       );
@@ -461,8 +539,8 @@
       }),
       gsap.to(zoomableCircle, {
         scale: 1,
-        duration: 0.5,
-        ease: "back.out(1.7)",
+        duration: 0.7,
+        ease: "power2.out",
         transformOrigin: "center center",
       })
     );
@@ -485,22 +563,24 @@
 
     // Remove fill effect
     if (path) {
-      path.setAttribute("fill", "none");
+      path.setAttribute("fill", "#0b3d2a");
     }
 
     // Create leave animations
     const leaveAnimations = [];
 
     if (text) {
+      text.style.fill = colorCreem; // Restore original color
+
       leaveAnimations.push(
         gsap.to(text, {
           opacity: 0,
-          duration: 0.2,
+          duration: 0.5,
           ease: "power2.out",
         }),
         gsap.set(text, {
           rotation: 0,
-          delay: 0.2,
+          delay: 0.5,
         })
       );
     }
@@ -510,7 +590,7 @@
         leaveAnimations.push(
           gsap.to(line, {
             strokeDashoffset: 12,
-            duration: 0.3,
+            duration: 0.5,
             ease: "power2.out",
           })
         );
@@ -521,7 +601,7 @@
       leaveAnimations.push(
         gsap.to(plusIcon, {
           rotation: 0,
-          duration: 0.3,
+          duration: 0.5,
           ease: "power2.out",
           transformOrigin: "center center",
         })
@@ -531,14 +611,14 @@
     leaveAnimations.push(
       gsap.to(zoomableCircle, {
         scale: 0,
-        duration: 0.2,
+        duration: 0.7,
         ease: "power2.out",
         transformOrigin: "center center",
       }),
       gsap.to(baseCircle, {
         scale: 1,
-        duration: 0.5,
-        ease: "back.out(1.7)",
+        duration: 0.7,
+        ease: "power2.out",
         transformOrigin: "center center",
         delay: 0.1,
       })
@@ -573,14 +653,34 @@
 
   // Utility function for color contrast (if needed)
   function getContrastColor(hex) {
-    if (!hex || hex.length !== 7) return "#fbe9ba";
+    if (!hex || hex.length !== 7) return colorCreem;
 
     const r = parseInt(hex.substr(1, 2), 16);
     const g = parseInt(hex.substr(3, 2), 16);
     const b = parseInt(hex.substr(5, 2), 16);
 
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.5 ? "#fbe9ba" : "white";
+    return luminance > 0.5 ? colorCreem : colorGreen;
+  }
+
+  // Get scrollbar width
+  let _cachedScrollbarWidth = null;
+  function getScrollbarWidth() {
+    if (_cachedScrollbarWidth !== null) return _cachedScrollbarWidth;
+
+    const div = document.createElement("div");
+    Object.assign(div.style, {
+      position: "absolute",
+      top: "-9999px",
+      width: "100px",
+      height: "100px",
+      overflow: "scroll",
+    });
+    document.body.appendChild(div);
+    _cachedScrollbarWidth = div.offsetWidth - div.clientWidth;
+    document.body.removeChild(div);
+
+    return _cachedScrollbarWidth;
   }
 
   // Cleanup function (call this if you need to destroy the map)
