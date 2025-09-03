@@ -468,22 +468,33 @@
       const bbox = path.getBBox();
       const patternId = `${path.id}-img`;
       const pattern = document.getElementById(patternId);
-      // const patternImg = document.getElementById(`${path.id}-clip-img`);
+      const patternImg = document.getElementById(`${path.id}-clip-img`);
+      const pathPoints = path.getAttribute('d');
 
       if (pattern) {
         // Calculate scale to fit the path's bounding box
         const scale = Math.max(bbox.width, bbox.height);
+        const width = Math.floor(bbox.width) * 1.2;
+        const height = Math.floor(bbox.height) * 1.25;
         // Set pattern transform to scale and position relative to the path
         pattern.setAttribute(
           "patternTransform",
           `translate(${bbox.x},${bbox.y}) scale(${scale})`
         );
-        // patternImg.setAttribute(
-        //   "transform",
-        //   `translate(${bbox.x},${bbox.y}) scale(${scale})`
-        // );
+        patternImg.setAttribute(
+          "transform",
+          `translate(0,0)`
+        );
+
+        patternImg.setAttribute("width", `${width}`)
+        patternImg.setAttribute("height", `${height}`)
+
+        console.log(bbox);
         
-        path.setAttribute("fill", `url(#${patternId})`);
+        // patternImg.style.clipPath = pathPoints;
+       
+        
+        // path.setAttribute("fill", `url(#${patternId})`);
       }
     }
 
