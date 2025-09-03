@@ -4,14 +4,35 @@
     --dreamlab-heading2-size-lg: 2rem;  
     --dreamlab-heading2-size-xl: 2.5rem;  
     --dreamlab-light-text: #82a293;
+    --dreamlab-light-lime: #bbfbed;
+    --dreamlab-lime: #9eeba6;
+    --dreamlab-blue: #376bdd;
+    --dreamlab-cream: #FFECB3;
+    --dreamlab-orange: #de6436;
 }
 
 .dreamlab-map-section{
     color: white;
     max-width: 100vw;
+    .w-60{
+        width: 60%;
+    }
+    .w-40{
+        width: 40%;
+    }
     .bg-green{
         background: var(--dreamlab-map-section-bg);
     }
+    .bg-cream{
+        background: var(--dreamlab-cream);
+    }
+    .bg-blue{
+        background: var(--dreamlab-blue);
+    }
+    .bg-orange{
+        background: var(--dreamlab-orange);
+    }
+    
     .map-area{
         padding: 3rem 10%;
         &:has(~.slider-area.active){
@@ -23,11 +44,37 @@
         transform: translateX(100%);
         overflow-x: hidden;
     }
+    .slide-bg{
+        background-size: cover;
+        background-repeat: no-repeat;
+        z-index: 1;
+        left: 0;
+        right: -2rem;
+    }
+    .slide-content{
+        padding: 2rem 1.5rem;
+    }
+    .slide-content{
+        position: relative;
+        z-index: 3;
+        margin-left: auto;
+        margin-right: 3.125rem;
+        transform: translateX(2);
+    }
+    .text-cream{
+        color: var(--dreamlab-cream);
+    }
     .text-green{
         color: var(--dreamlab-green);
     }
+    .text-light-lime{
+        color: var(--dreamlab-light-lime);
+    }
+    .text-lime{
+        color: var(--dreamlab-lime);
+    }
     p{
-        color: var(--dreamlab-light-text);
+        max-width: 21.5rem;
     }
     .info-content * + *{
         margin-top: 1rem;
@@ -35,6 +82,10 @@
     .text-sm{
         font-size: 0.875rem;
         letter-spacing: 0.15em;;
+    }
+
+    .content{
+        margin-top: 2.5rem;
     }
 
     .contrller{
@@ -135,9 +186,9 @@
                 transition: opacity 0.5s ease-in-out;
                 pointer-events: none;
             }
-            &:hover image{
+            /* &:hover image{
                 opacity: 1;
-            }
+            } */
         }
 
          path {
@@ -208,6 +259,17 @@
             position: absolute;
             right: 5rem;
             bottom: 6.25rem;;
+        }
+        .slide-content{
+            padding: 2rem 1.5rem;
+            img{
+                max-width: 100%;
+            }
+            .content-inner{
+                h2{
+                    font-size: 4rem;
+                }
+            }
         }
     }
 }

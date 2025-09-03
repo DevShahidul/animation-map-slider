@@ -15,6 +15,7 @@
     initializePulseAnimations();
     initializeMapAreas();
     initializeSliderControls();
+    initializeSwiper();
   });
 
   function initializeSliderControls() {
@@ -24,7 +25,7 @@
 
     closeButton.addEventListener("click", function (e) {
       animateSlider(false); // Close the slider
-      body.style.paddingRight = '';
+      body.style.paddingRight = "";
       body.style.overflowY = "auto";
     });
   }
@@ -160,42 +161,42 @@
 
   function initializeAreasData() {
     return [
-        {
-          areaName: "Midwest",
-          areaImage: "https://picsum.photos/id/1043/800/400",
-          guideImage: "https://picsum.photos/id/1011/100/100",
-          climateInfo: "Hot summers, cold winters",
-          description: "The heartland of the United States.",
-        },
-        {
-          areaName: "Canada West",
-          areaImage: "https://picsum.photos/id/1015/800/400",
-          guideImage: "https://picsum.photos/id/1005/100/100",
-          climateInfo: "Cold winters, mild summers",
-          description: "Explore the beauty of Western Canada.",
-        },
-        {
-          areaName: "Canada East",
-          areaImage: "https://picsum.photos/id/1021/800/400",
-          guideImage: "https://picsum.photos/id/1001/100/100",
-          climateInfo: "Humid summers, snowy winters",
-          description: "Discover Eastern Canada's rich culture.",
-        },
-        {
-          areaName: "US West",
-          areaImage: "https://picsum.photos/id/1035/800/400",
-          guideImage: "https://picsum.photos/id/1006/100/100",
-          climateInfo: "Warm, dry climate",
-          description: "From California beaches to Nevada deserts.",
-        },
-        {
-          areaName: "US East",
-          areaImage: "https://picsum.photos/id/1052/800/400",
-          guideImage: "https://picsum.photos/id/1012/100/100",
-          climateInfo: "Mild climate with four seasons",
-          description: "Home to New York, Washington D.C., and Boston.",
-        },
-      ];
+      {
+        areaName: "Midwest",
+        areaImage: "https://picsum.photos/id/1043/800/400",
+        guideImage: "https://picsum.photos/id/1011/100/100",
+        climateInfo: "Hot summers, cold winters",
+        description: "The heartland of the United States.",
+      },
+      {
+        areaName: "Canada West",
+        areaImage: "https://picsum.photos/id/1015/800/400",
+        guideImage: "https://picsum.photos/id/1005/100/100",
+        climateInfo: "Cold winters, mild summers",
+        description: "Explore the beauty of Western Canada.",
+      },
+      {
+        areaName: "Canada East",
+        areaImage: "https://picsum.photos/id/1021/800/400",
+        guideImage: "https://picsum.photos/id/1001/100/100",
+        climateInfo: "Humid summers, snowy winters",
+        description: "Discover Eastern Canada's rich culture.",
+      },
+      {
+        areaName: "US West",
+        areaImage: "https://picsum.photos/id/1035/800/400",
+        guideImage: "https://picsum.photos/id/1006/100/100",
+        climateInfo: "Warm, dry climate",
+        description: "From California beaches to Nevada deserts.",
+      },
+      {
+        areaName: "US East",
+        areaImage: "https://picsum.photos/id/1052/800/400",
+        guideImage: "https://picsum.photos/id/1012/100/100",
+        climateInfo: "Mild climate with four seasons",
+        description: "Home to New York, Washington D.C., and Boston.",
+      },
+    ];
   }
 
   function animateSlider(shouldOpen = true) {
@@ -220,16 +221,16 @@
         x: "0%",
         duration: 1.5,
         ease: "power3.inOut",
-      })
+      });
       tl.to(
-          mapArea,
-          {
-            x: "-32%",
-            duration: 1.9,
-            ease: "power3.inOut",
-          },
-          "<+=0.15"
-        ) // Start slightly after slider, creates parallax effect
+        mapArea,
+        {
+          x: "-32%",
+          duration: 1.9,
+          ease: "power3.inOut",
+        },
+        "<+=0.15"
+      ) // Start slightly after slider, creates parallax effect
         .to(
           closeButton,
           {
@@ -469,7 +470,7 @@
       const patternId = `${path.id}-img`;
       const pattern = document.getElementById(patternId);
       const patternImg = document.getElementById(`${path.id}-clip-img`);
-      const pathPoints = path.getAttribute('d');
+      const pathPoints = path.getAttribute("d");
 
       if (pattern) {
         // Calculate scale to fit the path's bounding box
@@ -481,20 +482,16 @@
           "patternTransform",
           `translate(${bbox.x},${bbox.y}) scale(${scale})`
         );
-        patternImg.setAttribute(
-          "transform",
-          `translate(0,0)`
-        );
 
-        patternImg.setAttribute("width", `${width}`)
-        patternImg.setAttribute("height", `${height}`)
+        // patternImg.setAttribute(
+        //   "transform",
+        //   `translate(${bbox.x},${bbox.y})`
+        // );
 
-        console.log(bbox);
-        
-        // patternImg.style.clipPath = pathPoints;
-       
-        
-        // path.setAttribute("fill", `url(#${patternId})`);
+        // patternImg.setAttribute("width", `${width}`)
+        // patternImg.setAttribute("height", `${height}`)
+
+        path.setAttribute("fill", `url(#${patternId})`);
       }
     }
 
@@ -720,6 +717,90 @@
 
     // Clear state
     animationState.clear();
+  }
+
+  function animateSlideElements(slide, isActive) {
+    const bg = slide.querySelector(".slide-bg");
+    const content = slide.querySelector(".slide-content");
+
+    if (isActive) {
+      gsap.to(bg, {
+        x: -64, // -4rem
+        duration: 1.2,
+        ease: "power2.out",
+        delay: 0.3,
+      });
+
+      gsap.to(content, {
+        x: 0,
+        opacity: 1,
+        duration: 1.2,
+        ease: "power2.out",
+        delay: 0.5,
+      });
+    } else {
+      gsap.set(bg, { x: 0 });
+      gsap.set(content, {
+        x: 64, // 4rem
+        opacity: 0,
+      });
+    }
+  }
+
+  function initializeSwiper() {
+    const swiper = new Swiper(".swiper", {
+      direction: "horizontal",
+      loop: true,
+      autoplay: {
+        delay: 500,
+        disableOnInteraction: false,
+      },
+      speed: 1000,
+      // on: {
+      //   init: function () {
+      //     document.querySelector('.slider-counter .total').textContent = this.slides.length - 2;
+      //   },
+      //   slideChange: function () {
+      //     document.querySelector('.slider-counter .current').textContent =
+      //       this.realIndex + 1;
+      //   }
+      // }
+      effect: "creative",
+      creativeEffect: {
+        prev: {
+          translate: ["-100%", 0, 0],
+          opacity: 0,
+        },
+        next: {
+          translate: ["100%", 0, 0],
+          opacity: 0,
+        },
+      },
+      on: {
+        init: function () {
+          document.querySelector(".slider-counter .total").textContent =
+            this.slides.length - 2;
+          // Initialize first slide's parallax
+          const activeSlide = this.slides[this.activeIndex];
+          animateSlideElements(activeSlide, true);
+        },
+        slideChange: function () {
+          document.querySelector(".slider-counter .current").textContent =
+            this.realIndex + 1;
+        },
+        slideChangeTransitionStart: function () {
+          // Reset all slides
+          this.slides.forEach((slide) => {
+            animateSlideElements(slide, false);
+          });
+        },
+        slideChangeTransitionEnd: function () {
+          // Animate active slide
+          const activeSlide = this.slides[this.activeIndex];
+          animateSlideElements(activeSlide, true);
+        },
+      },
+    });
   }
 
   // Public API
