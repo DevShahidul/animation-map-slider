@@ -7,6 +7,8 @@
   const colorGreen = "#0b3d2a";
   const colorCreem = "#fbe9ba";
 
+  let mapSliderSwiperInstance = null;
+
   document.addEventListener("DOMContentLoaded", () => {
     const mapSection = document.querySelector(".dreamlab-map-section");
     if (!mapSection) return;
@@ -285,14 +287,123 @@
       const isOpen = sliderArea?.classList.contains("active");
       const scrollbarWidth = getScrollbarWidth();
 
-      // initilize swiper slider
-      initializeSwiper();
-      // Toggle the slider state
-      animateSlider(!isOpen);
+
+      if(!mapSliderSwiperInstance) {
+        initializeSwiperSlider();
+      }
+
+      // Toggle the slider state and get the GSAP timeline
+      const sliderTimeline = animateSlider(!isOpen);
 
       body.style.paddingRight = `${scrollbarWidth}px`;
       body.style.overflow = "hidden";
+
+      // When animation is done, start autoplay
+      if(!isOpen && mapSliderSwiperInstance) {
+        sliderTimeline.eventCallback("onComplete", () => {
+          mapSliderSwiperInstance.autoplay.start();
+        })
+      }
+
+      // sliderTimeline.then(() => {
+      //   // If a swiper instance already exists, kill it and reinitialize it.
+      //   if (window.mySwiperInstance) {
+      //     window.mySwiperInstance.destroy(true, true);
+      //   }
+      // });
+
+
     });
+  }
+
+  let mapSwiperInitialized = false;
+
+  function initializeSwiperSlider() {
+
+    if (mapSwiperInitialized) return;
+    mapSwiperInitialized = true;
+
+    mapSliderSwiperInstance = new Swiper(".swiper", {
+      direction: "horizontal",
+      loop: true,
+      speed: 2000,
+      autoplay: {
+        delay: 1800,
+        disableOnInteraction: false,
+      },
+      watchSlidesProgress: true,
+      effect: "creative",
+      creativeEffect: {
+        prev: {
+          translate: ["-100%", 0, 0],
+          opacity: 1,
+        },
+        next: {
+          translate: ["100%", 0, 0],
+          opacity: 1,
+        },
+      },
+      on: {
+        init: function () {
+          // Stop autoplay on init
+          this.autoplay.stop();
+
+          const slides = this.slides;
+          const activeIndex = this.activeIndex;
+          const activeSlide = slides[activeIndex];
+
+          const prevIndex = this.previousIndex;
+          const prevSlide = slides[prevIndex];
+
+          const sliderWrapper = document.getElementById("map-swiper-wrapper");
+          sliderWrapper.style.setProperty("--total-slide", slides.length);
+
+          slides.forEach((slide) => {
+            const originalIndex = parseInt(slide.dataset.swiperSlideIndex, 10);
+            slide.style.setProperty("--slide-index", originalIndex);
+          });
+
+          setCurrentSlideNumber(this.realIndex, activeSlide);
+          setTotalSlideNumber(slides.length, activeSlide);
+          animateSlideElements(
+            activeSlide,
+            prevSlide,
+            slides[activeIndex + 1],
+            activeIndex,
+            this.previousIndex
+          );
+        },
+
+        slideChange: function () {
+          const slides = this.slides;
+          const activeIndex = this.activeIndex;
+          const activeSlide = slides[activeIndex];
+
+          setCurrentSlideNumber(this.realIndex, activeSlide);
+          // setTotalSlideNumber(slides.length, activeSlide);
+        },
+
+        slideChangeTransitionStart: function () {
+          const slides = this.slides;
+          const activeIndex = this.activeIndex;
+          const prevIndex = this.previousIndex;
+          const nextSlide = slides[activeIndex + 1];
+
+          const activeSlide = slides[activeIndex];
+          const prevSlide = slides[prevIndex];
+
+          animateSlideElements(
+            activeSlide,
+            prevSlide,
+            nextSlide,
+            activeIndex,
+            prevIndex
+          );
+        },
+      },
+    });
+
+    return mapSliderSwiperInstance;
   }
 
   function getAreaElements(area) {
@@ -721,93 +832,6 @@
     animationState.clear();
   }
 
-  // function animateSlideElements(slide, activeIndex, prevIndex, prevSlide) {
-
-  //   const bg = slide.querySelector(".slide-bg");
-  //   const content = slide.querySelector(".slide-content");
-
-  //   // Set initial state if not visible
-  //   gsap.set(bg, { x: 0 });
-  //   gsap.set(content, {
-  //     x: 24,
-  //   });
-
-  //   // Animate both elements in sync with the slide transition
-  //   const tl = gsap.timeline({
-  //     defaults: {
-  //       duration: 1,
-  //       ease: "power3.inOut"
-  //     }
-  //   });
-
-  //   // Moving forward
-  //   if(activeIndex > prevIndex) {
-  //     tl.fromTo(bg,
-  //         {
-  //           x: 0
-  //         },
-  //         {
-  //           x: -32,
-  //           duration: 1.2
-  //         }
-  //       ).fromTo(content,
-  //       { x: 24 },
-  //       {
-  //         x: 0,
-  //         duration: 1.5
-  //       },
-  //       "<" // Start at the same time as bg animation
-  //     );
-  //     if (prevSlide) {
-  //       tl.to(bg,
-  //         {
-  //           x: -64,
-  //           duration: 1.2
-  //         }
-  //       ).to(content,
-  //       {
-  //         x: -24,
-  //         duration: 1.5
-  //       },
-  //       "<" // Start at the same time as bg animation
-  //     );
-  //     }
-  //   } else if(activeIndex < prevIndex) {
-  //     tl.fromTo(bg,
-  //         {
-  //           x: -64
-  //         },
-  //         {
-  //           x: -32,
-  //           duration: 1.2
-  //         }
-  //       ).fromTo(content,
-  //       { x: -24 },
-  //       {
-  //         x: 0,
-  //         duration: 1.5
-  //       },
-  //       "<" // Start at the same time as bg animation
-  //     );
-  //     if (prevSlide) {
-  //       tl.to(bg,
-  //         {
-  //           x: 0,
-  //           duration: 1.2
-  //         }
-  //       ).to(content,
-  //       {
-  //         x: 24,
-  //         duration: 1.5
-  //       },
-  //       "<" // Start at the same time as bg animation
-  //     );
-  //     }
-  //   }
-
-  //   return tl;
-  // }
-
   function animateSlideElements(
     activeSlide,
     prevSlide,
@@ -851,14 +875,8 @@
     });
 
     if (direction === "forward") {
-
       // Active slide enters from right (x: 24 → 0)
-      tl.fromTo(
-        activeBg,
-        { x: -32 },
-        { x: -64, delay: 0.2 },
-        0
-      ).fromTo(
+      tl.fromTo(activeBg, { x: -32 }, { x: -64, delay: 0.2 }, 0).fromTo(
         activeContent,
         { x: 24 },
         { x: -24, duration: 1.5, delay: 0.3 },
@@ -939,98 +957,22 @@
         );
       }
     }
+
+    return tl;
   }
 
   // Set current slide number with padding if it's below 10
   function setCurrentSlideNumber(indx, activeSlide) {
     const paddedIndex = indx + 1 < 10 ? `0${indx + 1}` : indx + 1;
-    activeSlide.querySelector(".slider-counter .current").textContent = paddedIndex;
+    activeSlide.querySelector(".slider-counter .current").textContent =
+      paddedIndex;
   }
 
   // Set total slide number with padding if it's below 10
   function setTotalSlideNumber(total, activeSlide) {
     const paddedTotal = total < 10 ? `0${total}` : total;
-    activeSlide.querySelector(".slider-counter .total").textContent = paddedTotal;
-  }
-
-  function initializeSwiper() {
-    const swiper = new Swiper(".swiper", {
-      direction: "horizontal",
-      loop: true,
-      autoplay: {
-        delay: 1000,
-        disableOnInteraction: false,
-      },
-      speed: 2000,
-      watchSlidesProgress: true,
-      effect: "creative",
-      creativeEffect: {
-        prev: {
-          translate: ["-100%", 0, 0],
-          opacity: 1,
-        },
-        next: {
-          translate: ["100%", 0, 0],
-          opacity: 1,
-        },
-      },
-      on: {
-        init: function () {
-          const slides = this.slides;
-          const activeIndex = this.activeIndex;
-          const prevIndex = this.previousIndex;
-          const prevSlide = slides[prevIndex];
-          const nextSlide = slides[activeIndex + 1];
-          const activeSlide = slides[activeIndex];
-
-          const sliderWrapper = document.getElementById("map-swiper-wrapper");
-          sliderWrapper.style.setProperty("--total-slide", slides.length);
-
-          slides.forEach((slide) => {
-            const originalIndex = parseInt(slide.dataset.swiperSlideIndex, 10);
-            slide.style.setProperty("--slide-index", originalIndex);
-          })
-
-
-          setCurrentSlideNumber(this.realIndex, activeSlide);
-          setTotalSlideNumber(slides.length, activeSlide);
-          animateSlideElements(
-            activeSlide,
-            prevSlide,
-            nextSlide,
-            activeIndex,
-            prevIndex
-          );
-        },
-
-        slideChange: function () {
-          const slides = this.slides;
-          const activeIndex = this.activeIndex;
-          const activeSlide = slides[activeIndex];
-
-          setCurrentSlideNumber(this.realIndex, activeSlide);
-          setTotalSlideNumber(slides.length, activeSlide);
-        },
-
-        slideChangeTransitionStart: function () {
-          const slides = this.slides;
-          const activeIndex = this.activeIndex;
-          const prevIndex = this.previousIndex;
-          const nextSlide = slides[activeIndex + 1];
-
-          const activeSlide = slides[activeIndex];
-          const prevSlide = slides[prevIndex];
-
-          animateSlideElements(
-            activeSlide,
-            prevSlide,
-            nextSlide,
-            activeIndex,
-            prevIndex
-          );
-        },
-      },
-    });
+    activeSlide.querySelector(".slider-counter .total").textContent =
+      paddedTotal;
   }
 
   // Public API
