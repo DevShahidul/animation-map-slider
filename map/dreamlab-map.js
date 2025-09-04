@@ -907,6 +907,29 @@
         0
       );
 
+      tl.fromTo(
+        nextBg,
+        {
+          x: -64,
+        },
+        {
+          x: 0,
+          duration: 0.3,
+          delay: 0.6,
+          ease: "power3.inOut",
+        }
+      ).fromTo(
+        nextContent,
+        {
+          x: -48,
+        },
+        {
+          x: 24,
+          duration: 0.5,
+          delay: 0.7,
+        }
+      );
+
       // Previous slide exits to right (x: 0 → 24)
       if (prevSlide) {
         tl.to(prevBg, { x: 0, duration: 1.2 }, 0).to(
@@ -935,7 +958,7 @@
       direction: "horizontal",
       loop: true,
       autoplay: {
-        delay: 5000000,
+        delay: 1000,
         disableOnInteraction: false,
       },
       speed: 2000,
