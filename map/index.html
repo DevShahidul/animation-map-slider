@@ -19,7 +19,10 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+    />
     <link rel="stylesheet" href="dreamlab-map.css" />
   </head>
   <body>
@@ -27,25 +30,29 @@
       class="dreamlab-map-section position-relative overflow-x-hidden min-vh-100 w-100%"
       id="map-section"
     >
-      <button id="btn-close-slider" class="btn-close-slider bg-transparent fixed-top border-0 text-bg-dark d-flex align-items-center z-index-fixed mt-1 py-3 ">
-        <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+      <button
+        id="btn-close-slider"
+        class="btn-close-slider bg-transparent fixed-top border-0 text-bg-dark d-flex align-items-center z-index-fixed mt-1 py-3"
       >
-        <polyline points="15 18 9 12 15 6" />
-      </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
 
         <span>Back</span>
       </button>
       <!-- Map area -->
-      <div class="map-area bg-green position-relative bg-green min-vh-100 h-100 w-100 py-5"
+      <div
+        class="map-area bg-green position-relative bg-green min-vh-100 h-100 w-100 py-5"
       >
         <div class="info">
           <div class="info-content">
@@ -576,95 +583,118 @@
       >
         <!-- Slider main container -->
         <div class="swiper h-100">
-          <!-- Slider counter -->
-          <div class="slider-counter position-absolute top-4 start-50 translate-middle-x z-1">
-            <span class="current">1</span>
-            <span class="separator mx-2"></span>
-            <span class="total">3</span>
-          </div>
-
+          
           <!-- Slides wrapper -->
           <div class="swiper-wrapper h-100">
             <!-- Slide 1 -->
             <div class="swiper-slide">
               <div class="slide-inner h-100 d-flex">
-                <div class="slide-bg position-absolute h-100" style="background-image: url('https://picsum.photos/id/128/3823/2549');"></div>
-                <div class="slide-content w-40 p-5 bg-orange">
-                  <div class="content-inner h-100 text-cream d-flex flex-column">
+                <!-- Slider counter -->
+                <div
+                  class="slider-counter d-flex justify-content-center align-items-center"
+                >
+                  <span class="current">1</span>
+                  <span class="separator">
+                    <span class="current-point"></span>
+                  </span>
+                  <span class="total">3</span>
+                </div>
+                <div
+                  class="slide-bg position-absolute h-100"
+                  style="
+                    background-image: url('https://picsum.photos/id/128/3823/2549');
+                  "
+                ></div>
+                <div class="slide-content position-relative" style="--slide-background: #de6436; --slide-forground: #FFECB3;">
+                  <div
+                    class="content-inner h-100 d-flex flex-column"
+                  >
                     <div class="figure">
-                      <img src="https://images.unsplash.com/photo-1659353588842-891391e6fcd4?fm=jpgs" alt="Plumber">
+                      <img
+                        src="https://images.unsplash.com/photo-1659353588842-891391e6fcd4?fm=jpgs"
+                        alt="Plumber"
+                      />
                     </div>
-                    <div class="flex-grow-1 d-flex align-items-end content">
-                      <div>
-                    <h6 class="text-uppercase text-sm">Climate Status</h6>
-                    <h2>First Slide Title</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </div>
-                  <div>
-                    <svg
-  width="100"
-  height="100"
-  viewBox="0 0 100 100"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
->
-  <g class="indicator" transform="translate(570,450)">
-    <circle class="circle-puls" r="10" fill="#fbe9ba"></circle>
-    <circle class="circle" r="10" fill="#fbe9ba"></circle>
-    <circle class="circle-zoom" r="23" fill="#fbe9ba"></circle>
+                    <div class="flex-grow-1 d-flex align-items-end content position-relative">
+                      <div class="content-wrapper">
+                        <h6 class="text-uppercase text-sm">Climate Status</h6>
+                        <h2>First Slide Title</h2>
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit. Sed do eiusmod tempor incididunt ut labore et
+                          dolore magna aliqua.
+                        </p>
+                      <div class="animated-circle-text position-absolute end-0">
+                        <svg
+                          width="100"
+                          height="100"
+                          viewBox="0 0 100 100"
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlns:xlink="http://www.w3.org/1999/xlink"
+                        >
+                          <g class="indicator" transform="translate(50,50)">
+                            
+                            <circle
+                              class="circle"
+                              r="23"
+                              fill="currentColor"
+                            ></circle>
+                            <path
+                              id="textPathCircle1"
+                              class="textpath-circle"
+                              d="M 0,-29 A 30,30 0 1,1 -0.1,-29"
+                              fill="none"
+                              stroke="none"
+                            />
+                            <text class="text" fill="currentColor">
+                              <textPath
+                                href="#textPathCircle1"
+                                startOffset="66%"
+                                dy="-20"
+                                text-anchor="middle"
+                              >
+                                DISCOVER
+                              </textPath>
+                              <textPath
+                                href="#textPathCircle1"
+                                startOffset="16%"
+                                dy="20"
+                                text-anchor="middle"
+                              >
+                                STORIES
+                              </textPath>
+                            </text>
 
-    <path
-      id="textPathCircle1"
-      class="textpath-circle"
-      d="M 0,-29 A 30,30 0 1,1 -0.1,-29"
-      fill="none"
-      stroke="none"
-    />
-
-    <text class="text">
-      <textPath
-        href="#textPathCircle1"
-        startOffset="66%"
-        dy="-20"
-        text-anchor="middle"
-      >
-        DISCOVER
-      </textPath>
-      <textPath
-        href="#textPathCircle1"
-        startOffset="16%"
-        dy="20"
-        text-anchor="middle"
-      >
-        STORIES
-      </textPath>
-    </text>
-
-    <g class="plus-icon">
-      <line
-        x1="0"
-        y1="-6"
-        x2="0"
-        y2="6"
-        stroke-dasharray="12"
-        stroke-dashoffset="12"
-        stroke="black"
-        stroke-width="2"
-      />
-      <line
-        x1="-6"
-        y1="0"
-        x2="6"
-        y2="0"
-        stroke-dasharray="12"
-        stroke-dashoffset="12"
-        stroke="black"
-        stroke-width="2"
-      />
-    </g>
-  </g>
-</svg>
-                  </div>
+                            <g class="plus-icon">
+                              <line
+                                x1="0"
+                                y1="-6"
+                                x2="0"
+                                y2="6"
+                                stroke-dasharray="12"
+                                stroke-dashoffset="0"
+                                stroke="black"
+                                stroke-width="2"
+                              />
+                              <line
+                                x1="-6"
+                                y1="0"
+                                x2="6"
+                                y2="0"
+                                stroke-dasharray="12"
+                                stroke-dashoffset="0"
+                                stroke="black"
+                                stroke-width="2"
+                              />
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                      </div>
+                      <div class="area-bg">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 351.73 452.37"><defs><style>.cls-1{fill:none;stroke:var(--slide-forground);stroke-miterlimit:10}</style></defs><path d="M84.59.72s52 17.17 83.88 23.41c0 0-14 58.94-13.76 67.41 0 0-30.59-10.12-53.89-6.82l-13.64-1.65s-5.89-5.65-17-4c0 0-11.52.24-8.7-11.76 0 0 2.12-6.12-6.35-5.65 0 0-5-4.71-8.71-4 0 0 3.53-12.24 2.82-14.59 0 0 3.77-1.18-.7-6.59 0 0 .94-19.76-.24-24.47 0 0-.47-9.41 8.71-1.65 0 0 5.17 7.3 18.59 10.36 0 0 3.06 5.17.94 5.88 0 0-10.12 3.06-2.36 4.47 0 0 0 8.24-4.23 7.53 0 0-5.65 7.29 4 4.47 0 0 7.29-2.35 4.94-9.41 0 0-3.29-6.59 2.12-6.83 0 0 4.94-4.23.94-9.41 0 0 5.65-7.06-.24-13.88.05 0-.73-4 2.88-2.82Z" class="cls-1"/><path d="M184.82 27.31s-8 22.82-3.53 24.94c0 0 2.59 9.64 2.12 13.88 0 0 11.77 20.94 15.06 20.94 0 0-1.18 10.82-3.06 14.59 0 0-6.35 15.29 1.18 8.94 0 0 6.59-5.18 7.76 12 0 0 .94 13.18 7.3 12.23 0 0-1.65 9.18 6.35 7.06 0 0 10.35-.94 15.76 1.89 0 0 4.24-8.47 7.77 0l-9.88 59.05-98.59-20.23s8-45.65 12.23-49.65c0 0-9.64-1.88 1.89-13.41 0 0 23-18.12 7.53-28a650.59 650.59 0 0 1 13.76-67.41Z" class="cls-1"/><path d="M185.97 27.89s71.41 19.47 165.26 26.65v93.71s-97-10.83-107.58-13.89l-2.12 9.42s-2.59-8.31-7.77 0c0 0-4.91-2.64-15.76-1.89 0 0-7.37 3.05-6.35-7.06 0 0-5.82 1.93-7.26-11.78 0 0-.49-16.83-7.8-12.45 0 0-5 4.32-3.42-2.07 0 0 4.93-12 5.3-21.46 0 0-2 1.35-15.06-20.94 0 0 .49-4.84-2.12-13.88 0 0-4.58-1.11 3.53-24.94l.44.05Z" class="cls-1"/><path d="M348.32 241.86s-112.67-12.2-120.2-16c0 0 13.41-87.53 15.53-91.53 0 0 7.88 2.83 107.58 13.89v93.61Z" class="cls-1"/><path d="m351.23 332.25-101.94-11.3 13.82-89.18s85.6 10.77 88.12 10.09Z" class="cls-1"/><path d="M245.06 321.66s-83.06-10.83-85.88-15.3l22.38-113.81 50.09 10.28-3.53 23.06s9.76 2.75 35 5.88l-13.82 89.18a19 19 0 0 1-4.24.71Z" class="cls-1"/><path d="M351.23 448.25s-65.11-4.94-70-7.42v6s-23.3-2.47-30.36-4.58l-3.17 9.53h-16.29l17.88-130.83 101.94 11.3Z" class="cls-1"/><path d="m223.65 450.19-31.42-4.41-68.47-40.24v-4.59s15.71 2.65 8.12-6.7c0 0-3-9 2.83-9.71 0 0 3.17-15.18 11.29-16.41 0 0-6.18-15.18-6-18.88 0 0-2.29-29.65 8.82-24.36 0 0 6.65 10.19 8.83-5.82l1.53-12.71s-4.18 2.83 85.88 15.3l4.23-.71-17.88 130.83Z" class="cls-1"/><path d="M136.47 344.48 68.35 241.86s-6.12-6.61 4.24-35.29l9.88-36.68 50.59 12.71 48.5 10-22.38 113.76s-1.09 31.86-10.36 18.53c0 0-10.32-7-8.82 24.36Z" class="cls-1"/><path d="m116.82 399.42-29.06-2.35s-8.94 2-7.53-13.53c0 0 0-10.29-15.32-21.85 0 0 .71-6.36-8.29-8.38 0 0-8.56-5-9.71-11.48 0 0-22-2.91-19.94-17.47 0 0-21.44-56.82-15.44-72 0 0-19.06-46.26-7.06-64.25 0 0 2.47-22.92 6.35-27.51l.71-12.35 70.94 21.64-9.88 36.68s-10.15 26.38-4.24 35.29L140 349.25s.18 4.94 6 18.88c0 0-7-.19-11.29 16.41 0 0-5.56.27-2.83 9.71 0 0 8.56 9-8.12 6.7l-2.38-.79ZM44.35 64.07l2.12-6.41s3.06-.94 8.71 4c0 0 7.76-1.12 6.35 5.65 0 0-3.59 10.88 8.7 11.76 0 0 9.18-2 17 4l13.64 1.65s20.83-3.65 53.89 6.82c0 0 16.23 7.94-7.53 28 0 0-11.36 10.59-1.89 13.41a14.47 14.47 0 0 0-2.17 4.48 390.5 390.5 0 0 0-10.06 45.17l-50.64-12.71-70.94-21.64s-1.94-20.47 10.76-31.77Z" class="cls-1"/></svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -673,17 +703,31 @@
             <!-- Slide 2 -->
             <div class="swiper-slide">
               <div class="slide-inner h-100 d-flex">
-                <div class="slide-bg position-absolute h-100" style="background-image: url('https://picsum.photos/id/146/5000/3333');"></div>
-                <div class="slide-content w-40 p-5 bg-blue">
-                  <div class="content-inner h-100 text-white d-flex flex-column">
+                <div
+                  class="slide-bg position-absolute h-100"
+                  style="
+                    background-image: url('https://picsum.photos/id/146/5000/3333');
+                  "
+                ></div>
+                <div class="slide-content p-5 bg-blue">
+                  <div
+                    class="content-inner h-100 text-white d-flex flex-column"
+                  >
                     <div class="figure">
-                      <img src="https://plus.unsplash.com/premium_photo-1664299069577-11579b487e6c?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Plumber working">
+                      <img
+                        src="https://plus.unsplash.com/premium_photo-1664299069577-11579b487e6c?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt="Plumber working"
+                      />
                     </div>
                     <div class="flex-grow-1 d-flex align-items-end">
                       <div>
                         <h6 class="text-uppercase text-sm">Climate Status</h6>
                         <h2>Second Slide Title</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit. Sed do eiusmod tempor incididunt ut labore et
+                          dolore magna aliqua.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -694,28 +738,39 @@
             <!-- Slide 3 -->
             <div class="swiper-slide">
               <div class="slide-inner h-100 d-flex">
-                <div class="slide-bg position-absolute h-100" style="background-image: url('https://picsum.photos/id/168/1920/1280');"></div>
-                <div class="slide-content w-40 p-5 bg-green">
+                <div
+                  class="slide-bg position-absolute h-100"
+                  style="
+                    background-image: url('https://picsum.photos/id/168/1920/1280');
+                  "
+                ></div>
+                <div class="slide-content p-5 bg-green">
                   <div class="content-inner h-100 text-dark d-flex flex-column">
                     <div class="figure">
-                      <img src="https://images.unsplash.com/photo-1659353590903-972270737d60?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+                      <img
+                        src="https://images.unsplash.com/photo-1659353590903-972270737d60?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt=""
+                      />
                     </div>
                     <div class="flex-grow-1 d-flex align-items-end">
                       <div>
-                    <h6 class="text-uppercase text-sm">Climate Status</h6>
-                    <h2>Third Slide Title</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </div>
+                        <h6 class="text-uppercase text-sm">Climate Status</h6>
+                        <h2>Third Slide Title</h2>
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit. Sed do eiusmod tempor incididunt ut labore et
+                          dolore magna aliqua.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <!-- //End Slide 3 -->
           </div>
+          <!-- //End Slides wrapper -->
         </div>
-        <!-- <div class="position-absolute start-0 top-0 w-100 h-100" style="background-image: url();">
-
-        </div> -->
-
       </div>
     </section>
   </body>

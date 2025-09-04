@@ -15,7 +15,6 @@
     initializePulseAnimations();
     initializeMapAreas();
     initializeSliderControls();
-    initializeSwiper();
   });
 
   function initializeSliderControls() {
@@ -285,6 +284,9 @@
       const sliderArea = document.querySelector(".slider-area");
       const isOpen = sliderArea?.classList.contains("active");
       const scrollbarWidth = getScrollbarWidth();
+
+      // initilize swiper slider
+      initializeSwiper();
       // Toggle the slider state
       animateSlider(!isOpen);
 
@@ -719,89 +721,257 @@
     animationState.clear();
   }
 
-  function animateSlideElements(slide, isActive) {
-    const bg = slide.querySelector(".slide-bg");
-    const content = slide.querySelector(".slide-content");
+  // function animateSlideElements(slide, activeIndex, prevIndex, prevSlide) {
 
-    if (isActive) {
-      gsap.to(bg, {
-        x: -64, // -4rem
-        duration: 1.2,
-        ease: "power2.out",
-        delay: 0.3,
-      });
+  //   const bg = slide.querySelector(".slide-bg");
+  //   const content = slide.querySelector(".slide-content");
 
-      gsap.to(content, {
-        x: 0,
-        opacity: 1,
-        duration: 1.2,
-        ease: "power2.out",
-        delay: 0.5,
-      });
-    } else {
-      gsap.set(bg, { x: 0 });
-      gsap.set(content, {
-        x: 64, // 4rem
-        opacity: 0,
-      });
+  //   // Set initial state if not visible
+  //   gsap.set(bg, { x: 0 });
+  //   gsap.set(content, {
+  //     x: 24,
+  //   });
+
+  //   // Animate both elements in sync with the slide transition
+  //   const tl = gsap.timeline({
+  //     defaults: {
+  //       duration: 1,
+  //       ease: "power3.inOut"
+  //     }
+  //   });
+
+  //   // Moving forward
+  //   if(activeIndex > prevIndex) {
+  //     tl.fromTo(bg, 
+  //         { 
+  //           x: 0
+  //         },
+  //         {
+  //           x: -32,
+  //           duration: 1.2
+  //         }
+  //       ).fromTo(content,
+  //       { x: 24 },
+  //       {
+  //         x: 0,
+  //         duration: 1.5
+  //       },
+  //       "<" // Start at the same time as bg animation
+  //     );
+  //     if (prevSlide) {
+  //       tl.to(bg,
+  //         {
+  //           x: -64,
+  //           duration: 1.2
+  //         }
+  //       ).to(content,
+  //       {
+  //         x: -24,
+  //         duration: 1.5
+  //       },
+  //       "<" // Start at the same time as bg animation
+  //     );
+  //     }
+  //   } else if(activeIndex < prevIndex) {
+  //     tl.fromTo(bg, 
+  //         { 
+  //           x: -64
+  //         },
+  //         {
+  //           x: -32,
+  //           duration: 1.2
+  //         }
+  //       ).fromTo(content,
+  //       { x: -24 },
+  //       {
+  //         x: 0,
+  //         duration: 1.5
+  //       },
+  //       "<" // Start at the same time as bg animation
+  //     );
+  //     if (prevSlide) {
+  //       tl.to(bg,
+  //         {
+  //           x: 0,
+  //           duration: 1.2
+  //         }
+  //       ).to(content,
+  //       {
+  //         x: 24,
+  //         duration: 1.5
+  //       },
+  //       "<" // Start at the same time as bg animation
+  //     );
+  //     }
+  //   }
+
+  //   return tl;
+  // }
+
+  function animateSlideElements(activeSlide, prevSlide, nextSlide, activeIndex, prevIndex) {
+  // if (!activeSlide) return;
+
+  const activeBg = activeSlide.querySelector(".slide-bg");
+  const activeRotatingText = activeSlide.querySelector("text.text");
+  const activeContent = activeSlide.querySelector(".slide-content");
+
+  const prevBg = prevSlide?.querySelector(".slide-bg");
+  const prevContent = prevSlide?.querySelector(".slide-content");
+
+  const nextBg = nextSlide?.querySelector(".slide-bg");
+  const nextContent = nextSlide?.querySelector(".slide-content");
+
+  console.log('ActiveSlide: ',activeBg, activeContent);
+  console.log('PrevSlide: ', prevBg, prevContent);
+  console.log('NextSlide: ', nextBg, nextContent);
+  
+
+  // Reset transforms
+  // gsap.set([activeBg, activeContent, prevBg, prevContent], { clearProps: "x" });
+
+  if(activeSlide){
+    gsap.to(activeRotatingText, {
+      rotation: "+=360",
+      duration: 25,
+      repeat: -1,
+      ease: "none",
+      transformOrigin: "center center",
+    })
+  }
+
+
+  const direction = activeIndex > prevIndex ? "forward" : "backward";
+
+  const tl = gsap.timeline({
+    defaults: { duration: 1, ease: "power1.inOut" }
+  });
+
+  if (direction === "forward") {
+    console.log("Slide forward!");
+    
+    // Active slide enters from right (x: 24 → 0)
+    tl.fromTo(
+      activeBg,
+      { x: -32 },
+      { x: -62, duration: 0.4, delay: 1 },
+      0
+    ).fromTo(
+      activeContent,
+      { x: 24 },
+      { x: 24, duration: 1, delay: 1, ease: "power3.inOut" },
+      0
+    );
+
+    tl.fromTo(nextBg, {
+      x: -64
+    }, {
+      x: 0, duration: 0.3, delay: 0.6, ease: "power3.inOut"
+    }).fromTo(nextContent, {
+      x: -24
+    },{
+      x: 24, duration: 0.5, delay: 0.7
+    })
+
+    // Previous slide exits to left (x: 0 → -24)
+    if (prevSlide) {
+      console.log('prevSlider block: ', prevSlide);
+      
+      tl.to(
+        prevBg,
+        { x: -64, duration: 0.8 },
+        0
+      ).to(
+        prevContent,
+        { x: -24, duration: 1},
+        0
+      );
+    }
+  } else if (direction === "backward") {
+    // Active slide enters from left (x: -24 → 0)
+    tl.fromTo(
+      activeBg,
+      { x: -64 },
+      { x: -32, duration: 1.2 },
+      0
+    ).fromTo(
+      activeContent,
+      { x: -24 },
+      { x: 0, duration: 1.5 },
+      0
+    );
+
+    // Previous slide exits to right (x: 0 → 24)
+    if (prevSlide) {
+      tl.to(
+        prevBg,
+        { x: 0, duration: 1.2 },
+        0
+      ).to(
+        prevContent,
+        { x: 24, duration: 1.5 },
+        0
+      );
     }
   }
+}
+
 
   function initializeSwiper() {
-    const swiper = new Swiper(".swiper", {
-      direction: "horizontal",
-      loop: true,
-      autoplay: {
-        delay: 500,
-        disableOnInteraction: false,
+  const swiper = new Swiper(".swiper", {
+    direction: "horizontal",
+    loop: true,
+    autoplay: {
+      delay: 5000000,
+      disableOnInteraction: false,
+    },
+    speed: 2000,
+    watchSlidesProgress: true,
+    effect: "creative",
+    creativeEffect: {
+      prev: {
+        translate: ["-100%", 0, 0],
+        opacity: 1,
       },
-      speed: 1000,
-      // on: {
-      //   init: function () {
-      //     document.querySelector('.slider-counter .total').textContent = this.slides.length - 2;
-      //   },
-      //   slideChange: function () {
-      //     document.querySelector('.slider-counter .current').textContent =
-      //       this.realIndex + 1;
-      //   }
-      // }
-      effect: "creative",
-      creativeEffect: {
-        prev: {
-          translate: ["-100%", 0, 0],
-          opacity: 0,
-        },
-        next: {
-          translate: ["100%", 0, 0],
-          opacity: 0,
-        },
+      next: {
+        translate: ["100%", 0, 0],
+        opacity: 1,
       },
-      on: {
-        init: function () {
-          document.querySelector(".slider-counter .total").textContent =
-            this.slides.length - 2;
-          // Initialize first slide's parallax
-          const activeSlide = this.slides[this.activeIndex];
-          animateSlideElements(activeSlide, true);
-        },
-        slideChange: function () {
-          document.querySelector(".slider-counter .current").textContent =
-            this.realIndex + 1;
-        },
-        slideChangeTransitionStart: function () {
-          // Reset all slides
-          this.slides.forEach((slide) => {
-            animateSlideElements(slide, false);
-          });
-        },
-        slideChangeTransitionEnd: function () {
-          // Animate active slide
-          const activeSlide = this.slides[this.activeIndex];
-          animateSlideElements(activeSlide, true);
-        },
+    },
+    on: {
+      init: function () {
+        const slides = this.slides;
+        const activeIndex = this.activeIndex;
+        const prevIndex = this.previousIndex;
+        const prevSlide = slides[prevIndex];
+        const nextSlide = slides[activeIndex + 1];
+
+        document.querySelector(".slider-counter .total").textContent =
+          slides.length - 2;
+
+        const activeSlide = slides[activeIndex];
+        animateSlideElements(activeSlide, prevSlide, nextSlide, activeIndex, prevIndex);
       },
-    });
-  }
+
+      slideChange: function () {
+        document.querySelector(".slider-counter .current").textContent =
+          this.realIndex + 1;
+      },
+
+      slideChangeTransitionStart: function () {
+        const slides = this.slides;
+        const activeIndex = this.activeIndex;
+        const prevIndex = this.previousIndex;
+        const nextSlide = slides[activeIndex + 1];
+
+        const activeSlide = slides[activeIndex];
+        const prevSlide = slides[prevIndex];
+
+        animateSlideElements(activeSlide, prevSlide, nextSlide, activeIndex, prevIndex);
+      },
+    },
+  });
+}
+
 
   // Public API
   window.InteractiveMap = {
