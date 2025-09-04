@@ -847,22 +847,21 @@
     const direction = activeIndex > prevIndex ? "forward" : "backward";
 
     const tl = gsap.timeline({
-      defaults: { duration: 1, ease: "power1.inOut" },
+      defaults: { duration: 1.3, ease: "power3.inOut" },
     });
 
     if (direction === "forward") {
-      console.log("Slide forward!");
 
       // Active slide enters from right (x: 24 → 0)
       tl.fromTo(
         activeBg,
         { x: -32 },
-        { x: -62, duration: 0.4, delay: 1 },
+        { x: -64, delay: 0.2 },
         0
       ).fromTo(
         activeContent,
         { x: 24 },
-        { x: 24, duration: 1, delay: 1, ease: "power3.inOut" },
+        { x: -24, duration: 1.5, delay: 0.3 },
         0
       );
 
@@ -880,7 +879,7 @@
       ).fromTo(
         nextContent,
         {
-          x: -24,
+          x: -48,
         },
         {
           x: 24,
@@ -895,16 +894,16 @@
 
         tl.to(prevBg, { x: -64, duration: 0.8 }, 0).to(
           prevContent,
-          { x: -24, duration: 1 },
+          { x: -96, duration: 1 },
           0
         );
       }
     } else if (direction === "backward") {
       // Active slide enters from left (x: -24 → 0)
-      tl.fromTo(activeBg, { x: -64 }, { x: -32, duration: 1.2 }, 0).fromTo(
+      tl.fromTo(activeBg, { x: -64 }, { x: -32, delay: 0.2 }, 0).fromTo(
         activeContent,
-        { x: -24 },
-        { x: 0, duration: 1.5 },
+        { x: -96 },
+        { x: -24, duration: 1.5, delay: 0.3 },
         0
       );
 
@@ -964,7 +963,10 @@
           const sliderWrapper = document.getElementById("map-swiper-wrapper");
           sliderWrapper.style.setProperty("--total-slide", slides.length);
 
-          // document.querySelector(".slider-counter .total").textContent = slides.length;
+          slides.forEach((slide) => {
+            const originalIndex = parseInt(slide.dataset.swiperSlideIndex, 10);
+            slide.style.setProperty("--slide-index", originalIndex);
+          })
 
 
           setCurrentSlideNumber(this.realIndex, activeSlide);
@@ -985,13 +987,6 @@
 
           setCurrentSlideNumber(this.realIndex, activeSlide);
           setTotalSlideNumber(slides.length, activeSlide);
-
-          // const paddedIndex =
-          //   this.realIndex + 1 < 10
-          //     ? `0${this.realIndex + 1}`
-          //     : this.realIndex + 1;
-          // activeSlide.querySelector(".slider-counter .current").textContent =
-          //   paddedIndex;
         },
 
         slideChangeTransitionStart: function () {

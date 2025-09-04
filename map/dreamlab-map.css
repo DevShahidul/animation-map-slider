@@ -128,7 +128,7 @@
         height: var(--indheight, 0.1875rem);
         left: calc(
           ((100% - var(--indWidth)) / (var(--total-slide) - 1)) *
-            var(--slide-index)
+            var(--slide-index, 1)
         );
         top: 50%;
         margin-top: calc((var(--indheight) / 2) * -1);
