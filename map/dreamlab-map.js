@@ -361,10 +361,12 @@
           slides.forEach((slide) => {
             const originalIndex = parseInt(slide.dataset.swiperSlideIndex, 10);
             slide.style.setProperty("--slide-index", originalIndex);
+            
+            setTotalSlideNumber(slides.length, slide);
           });
 
           setCurrentSlideNumber(this.realIndex, activeSlide);
-          setTotalSlideNumber(slides.length, activeSlide);
+          
           animateSlideElements(
             activeSlide,
             prevSlide,
@@ -380,7 +382,6 @@
           const activeSlide = slides[activeIndex];
 
           setCurrentSlideNumber(this.realIndex, activeSlide);
-          // setTotalSlideNumber(slides.length, activeSlide);
         },
 
         slideChangeTransitionStart: function () {
@@ -969,9 +970,9 @@
   }
 
   // Set total slide number with padding if it's below 10
-  function setTotalSlideNumber(total, activeSlide) {
+  function setTotalSlideNumber(total, slide) {
     const paddedTotal = total < 10 ? `0${total}` : total;
-    activeSlide.querySelector(".slider-counter .total").textContent =
+    slide.querySelector(".slider-counter .total").textContent =
       paddedTotal;
   }
 
