@@ -98,6 +98,9 @@
       line {
         stroke: var(--slide-background) !important;
       }
+      .indicator text.text {
+        fill: var(--slide-forground);
+      }
     }
   }
   .text-cream {
