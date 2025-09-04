@@ -281,15 +281,22 @@
 
     indicator.addEventListener("click", function (e) {
       e.stopPropagation();
+      
       handleMouseLeave(elements, index);
+
       const body = document.querySelector("body");
       const sliderArea = document.querySelector(".slider-area");
       const isOpen = sliderArea?.classList.contains("active");
       const scrollbarWidth = getScrollbarWidth();
 
-
+      // Only initialize swiper if it's not already initialized
       if(!mapSliderSwiperInstance) {
         initializeSwiperSlider();
+      }
+
+      // Navigate to the corresponding slide before animating
+      if (mapSliderSwiperInstance) {
+        mapSliderSwiperInstance.slideToLoop(index); // index from zone-area loop
       }
 
       // Toggle the slider state and get the GSAP timeline
@@ -361,7 +368,7 @@
           slides.forEach((slide) => {
             const originalIndex = parseInt(slide.dataset.swiperSlideIndex, 10);
             slide.style.setProperty("--slide-index", originalIndex);
-            
+
             setTotalSlideNumber(slides.length, slide);
           });
 
@@ -852,13 +859,6 @@
     const nextBg = nextSlide?.querySelector(".slide-bg");
     const nextContent = nextSlide?.querySelector(".slide-content");
 
-    console.log("ActiveSlide: ", activeBg, activeContent);
-    console.log("PrevSlide: ", prevBg, prevContent);
-    console.log("NextSlide: ", nextBg, nextContent);
-
-    // Reset transforms
-    // gsap.set([activeBg, activeContent, prevBg, prevContent], { clearProps: "x" });
-
     if (activeSlide) {
       gsap.to(activeRotatingText, {
         rotation: "+=360",
@@ -909,8 +909,6 @@
 
       // Previous slide exits to left (x: 0 → -24)
       if (prevSlide) {
-        console.log("prevSlider block: ", prevSlide);
-
         tl.to(prevBg, { x: -64, duration: 0.8 }, 0).to(
           prevContent,
           { x: -96, duration: 1 },
