@@ -585,20 +585,11 @@
         <div class="swiper h-100">
           
           <!-- Slides wrapper -->
-          <div class="swiper-wrapper h-100">
+          <div class="swiper-wrapper h-100" id="map-swiper-wrapper">
             <!-- Slide 1 -->
-            <div class="swiper-slide">
+            <div class="swiper-slide" style="--slide-index: attr(data-swiper-slide-index)">
               <div class="slide-inner h-100 d-flex">
                 <!-- Slider counter -->
-                <div
-                  class="slider-counter d-flex justify-content-center align-items-center"
-                >
-                  <span class="current">1</span>
-                  <span class="separator">
-                    <span class="current-point"></span>
-                  </span>
-                  <span class="total">3</span>
-                </div>
                 <div
                   class="slide-bg position-absolute h-100"
                   style="
@@ -609,6 +600,13 @@
                   <div
                     class="content-inner h-100 d-flex flex-column"
                   >
+                    <div
+                      class="slider-counter d-flex justify-content-center align-items-center gap-2"
+                    >
+                      <span class="current">1</span>
+                      <span class="separator"></span>
+                      <span class="total">3</span>
+                    </div>
                     <div class="figure">
                       <img
                         src="https://images.unsplash.com/photo-1659353588842-891391e6fcd4?fm=jpgs"

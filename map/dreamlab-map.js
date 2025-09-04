@@ -742,8 +742,8 @@
 
   //   // Moving forward
   //   if(activeIndex > prevIndex) {
-  //     tl.fromTo(bg, 
-  //         { 
+  //     tl.fromTo(bg,
+  //         {
   //           x: 0
   //         },
   //         {
@@ -773,8 +773,8 @@
   //     );
   //     }
   //   } else if(activeIndex < prevIndex) {
-  //     tl.fromTo(bg, 
-  //         { 
+  //     tl.fromTo(bg,
+  //         {
   //           x: -64
   //         },
   //         {
@@ -808,170 +808,212 @@
   //   return tl;
   // }
 
-  function animateSlideElements(activeSlide, prevSlide, nextSlide, activeIndex, prevIndex) {
-  // if (!activeSlide) return;
+  function animateSlideElements(
+    activeSlide,
+    prevSlide,
+    nextSlide,
+    activeIndex,
+    prevIndex
+  ) {
+    // if (!activeSlide) return;
 
-  const activeBg = activeSlide.querySelector(".slide-bg");
-  const activeRotatingText = activeSlide.querySelector("text.text");
-  const activeContent = activeSlide.querySelector(".slide-content");
+    const activeBg = activeSlide.querySelector(".slide-bg");
+    const activeRotatingText = activeSlide.querySelector("text.text");
+    const activeContent = activeSlide.querySelector(".slide-content");
 
-  const prevBg = prevSlide?.querySelector(".slide-bg");
-  const prevContent = prevSlide?.querySelector(".slide-content");
+    const prevBg = prevSlide?.querySelector(".slide-bg");
+    const prevContent = prevSlide?.querySelector(".slide-content");
 
-  const nextBg = nextSlide?.querySelector(".slide-bg");
-  const nextContent = nextSlide?.querySelector(".slide-content");
+    const nextBg = nextSlide?.querySelector(".slide-bg");
+    const nextContent = nextSlide?.querySelector(".slide-content");
 
-  console.log('ActiveSlide: ',activeBg, activeContent);
-  console.log('PrevSlide: ', prevBg, prevContent);
-  console.log('NextSlide: ', nextBg, nextContent);
-  
+    console.log("ActiveSlide: ", activeBg, activeContent);
+    console.log("PrevSlide: ", prevBg, prevContent);
+    console.log("NextSlide: ", nextBg, nextContent);
 
-  // Reset transforms
-  // gsap.set([activeBg, activeContent, prevBg, prevContent], { clearProps: "x" });
+    // Reset transforms
+    // gsap.set([activeBg, activeContent, prevBg, prevContent], { clearProps: "x" });
 
-  if(activeSlide){
-    gsap.to(activeRotatingText, {
-      rotation: "+=360",
-      duration: 25,
-      repeat: -1,
-      ease: "none",
-      transformOrigin: "center center",
-    })
-  }
+    if (activeSlide) {
+      gsap.to(activeRotatingText, {
+        rotation: "+=360",
+        duration: 25,
+        repeat: -1,
+        ease: "none",
+        transformOrigin: "center center",
+      });
+    }
 
+    const direction = activeIndex > prevIndex ? "forward" : "backward";
 
-  const direction = activeIndex > prevIndex ? "forward" : "backward";
+    const tl = gsap.timeline({
+      defaults: { duration: 1, ease: "power1.inOut" },
+    });
 
-  const tl = gsap.timeline({
-    defaults: { duration: 1, ease: "power1.inOut" }
-  });
+    if (direction === "forward") {
+      console.log("Slide forward!");
 
-  if (direction === "forward") {
-    console.log("Slide forward!");
-    
-    // Active slide enters from right (x: 24 → 0)
-    tl.fromTo(
-      activeBg,
-      { x: -32 },
-      { x: -62, duration: 0.4, delay: 1 },
-      0
-    ).fromTo(
-      activeContent,
-      { x: 24 },
-      { x: 24, duration: 1, delay: 1, ease: "power3.inOut" },
-      0
-    );
-
-    tl.fromTo(nextBg, {
-      x: -64
-    }, {
-      x: 0, duration: 0.3, delay: 0.6, ease: "power3.inOut"
-    }).fromTo(nextContent, {
-      x: -24
-    },{
-      x: 24, duration: 0.5, delay: 0.7
-    })
-
-    // Previous slide exits to left (x: 0 → -24)
-    if (prevSlide) {
-      console.log('prevSlider block: ', prevSlide);
-      
-      tl.to(
-        prevBg,
-        { x: -64, duration: 0.8 },
+      // Active slide enters from right (x: 24 → 0)
+      tl.fromTo(
+        activeBg,
+        { x: -32 },
+        { x: -62, duration: 0.4, delay: 1 },
         0
-      ).to(
-        prevContent,
-        { x: -24, duration: 1},
+      ).fromTo(
+        activeContent,
+        { x: 24 },
+        { x: 24, duration: 1, delay: 1, ease: "power3.inOut" },
         0
       );
-    }
-  } else if (direction === "backward") {
-    // Active slide enters from left (x: -24 → 0)
-    tl.fromTo(
-      activeBg,
-      { x: -64 },
-      { x: -32, duration: 1.2 },
-      0
-    ).fromTo(
-      activeContent,
-      { x: -24 },
-      { x: 0, duration: 1.5 },
-      0
-    );
 
-    // Previous slide exits to right (x: 0 → 24)
-    if (prevSlide) {
-      tl.to(
-        prevBg,
-        { x: 0, duration: 1.2 },
-        0
-      ).to(
-        prevContent,
-        { x: 24, duration: 1.5 },
+      tl.fromTo(
+        nextBg,
+        {
+          x: -64,
+        },
+        {
+          x: 0,
+          duration: 0.3,
+          delay: 0.6,
+          ease: "power3.inOut",
+        }
+      ).fromTo(
+        nextContent,
+        {
+          x: -24,
+        },
+        {
+          x: 24,
+          duration: 0.5,
+          delay: 0.7,
+        }
+      );
+
+      // Previous slide exits to left (x: 0 → -24)
+      if (prevSlide) {
+        console.log("prevSlider block: ", prevSlide);
+
+        tl.to(prevBg, { x: -64, duration: 0.8 }, 0).to(
+          prevContent,
+          { x: -24, duration: 1 },
+          0
+        );
+      }
+    } else if (direction === "backward") {
+      // Active slide enters from left (x: -24 → 0)
+      tl.fromTo(activeBg, { x: -64 }, { x: -32, duration: 1.2 }, 0).fromTo(
+        activeContent,
+        { x: -24 },
+        { x: 0, duration: 1.5 },
         0
       );
+
+      // Previous slide exits to right (x: 0 → 24)
+      if (prevSlide) {
+        tl.to(prevBg, { x: 0, duration: 1.2 }, 0).to(
+          prevContent,
+          { x: 24, duration: 1.5 },
+          0
+        );
+      }
     }
   }
-}
 
+  // Set current slide number with padding if it's below 10
+  function setCurrentSlideNumber(indx, activeSlide) {
+    const paddedIndex = indx + 1 < 10 ? `0${indx + 1}` : indx + 1;
+    activeSlide.querySelector(".slider-counter .current").textContent = paddedIndex;
+  }
+
+  // Set total slide number with padding if it's below 10
+  function setTotalSlideNumber(total, activeSlide) {
+    const paddedTotal = total < 10 ? `0${total}` : total;
+    activeSlide.querySelector(".slider-counter .total").textContent = paddedTotal;
+  }
 
   function initializeSwiper() {
-  const swiper = new Swiper(".swiper", {
-    direction: "horizontal",
-    loop: true,
-    autoplay: {
-      delay: 5000000,
-      disableOnInteraction: false,
-    },
-    speed: 2000,
-    watchSlidesProgress: true,
-    effect: "creative",
-    creativeEffect: {
-      prev: {
-        translate: ["-100%", 0, 0],
-        opacity: 1,
+    const swiper = new Swiper(".swiper", {
+      direction: "horizontal",
+      loop: true,
+      autoplay: {
+        delay: 5000000,
+        disableOnInteraction: false,
       },
-      next: {
-        translate: ["100%", 0, 0],
-        opacity: 1,
+      speed: 2000,
+      watchSlidesProgress: true,
+      effect: "creative",
+      creativeEffect: {
+        prev: {
+          translate: ["-100%", 0, 0],
+          opacity: 1,
+        },
+        next: {
+          translate: ["100%", 0, 0],
+          opacity: 1,
+        },
       },
-    },
-    on: {
-      init: function () {
-        const slides = this.slides;
-        const activeIndex = this.activeIndex;
-        const prevIndex = this.previousIndex;
-        const prevSlide = slides[prevIndex];
-        const nextSlide = slides[activeIndex + 1];
+      on: {
+        init: function () {
+          const slides = this.slides;
+          const activeIndex = this.activeIndex;
+          const prevIndex = this.previousIndex;
+          const prevSlide = slides[prevIndex];
+          const nextSlide = slides[activeIndex + 1];
+          const activeSlide = slides[activeIndex];
 
-        document.querySelector(".slider-counter .total").textContent =
-          slides.length - 2;
+          const sliderWrapper = document.getElementById("map-swiper-wrapper");
+          sliderWrapper.style.setProperty("--total-slide", slides.length);
 
-        const activeSlide = slides[activeIndex];
-        animateSlideElements(activeSlide, prevSlide, nextSlide, activeIndex, prevIndex);
+          // document.querySelector(".slider-counter .total").textContent = slides.length;
+
+
+          setCurrentSlideNumber(this.realIndex, activeSlide);
+          setTotalSlideNumber(slides.length, activeSlide);
+          animateSlideElements(
+            activeSlide,
+            prevSlide,
+            nextSlide,
+            activeIndex,
+            prevIndex
+          );
+        },
+
+        slideChange: function () {
+          const slides = this.slides;
+          const activeIndex = this.activeIndex;
+          const activeSlide = slides[activeIndex];
+
+          setCurrentSlideNumber(this.realIndex, activeSlide);
+          setTotalSlideNumber(slides.length, activeSlide);
+
+          // const paddedIndex =
+          //   this.realIndex + 1 < 10
+          //     ? `0${this.realIndex + 1}`
+          //     : this.realIndex + 1;
+          // activeSlide.querySelector(".slider-counter .current").textContent =
+          //   paddedIndex;
+        },
+
+        slideChangeTransitionStart: function () {
+          const slides = this.slides;
+          const activeIndex = this.activeIndex;
+          const prevIndex = this.previousIndex;
+          const nextSlide = slides[activeIndex + 1];
+
+          const activeSlide = slides[activeIndex];
+          const prevSlide = slides[prevIndex];
+
+          animateSlideElements(
+            activeSlide,
+            prevSlide,
+            nextSlide,
+            activeIndex,
+            prevIndex
+          );
+        },
       },
-
-      slideChange: function () {
-        document.querySelector(".slider-counter .current").textContent =
-          this.realIndex + 1;
-      },
-
-      slideChangeTransitionStart: function () {
-        const slides = this.slides;
-        const activeIndex = this.activeIndex;
-        const prevIndex = this.previousIndex;
-        const nextSlide = slides[activeIndex + 1];
-
-        const activeSlide = slides[activeIndex];
-        const prevSlide = slides[prevIndex];
-
-        animateSlideElements(activeSlide, prevSlide, nextSlide, activeIndex, prevIndex);
-      },
-    },
-  });
-}
-
+    });
+  }
 
   // Public API
   window.InteractiveMap = {
