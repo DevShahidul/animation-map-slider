@@ -1,16 +1,17 @@
 :root {
   --dreamlab-map-section-bg: #0b3d2a;
   --dreamlab-green: #9ee9a8;
-  --dreamlab-heading2-size-sm: 1.75rem;
-  --dreamlab-heading2-size-md: 2rem;
-  --dreamlab-heading2-size-lg: 2.5rem;
-  --dreamlab-heading2-size-xl: 3rem;
   --dreamlab-light-text: #82a293;
   --dreamlab-light-lime: #bbfbed;
   --dreamlab-lime: #9eeba6;
   --dreamlab-blue: #376bdd;
   --dreamlab-cream: #ffecb3;
   --dreamlab-orange: #de6436;
+  
+  --dreamlab-heading2-size-sm: 1.75rem;
+  --dreamlab-heading2-size-md: 2rem;
+  --dreamlab-heading2-size-lg: 2.5rem;
+  --dreamlab-heading2-size-xl: 3rem;
 }
 
 .dreamlab-map-section {
@@ -33,6 +34,10 @@
   }
   .bg-orange {
     background: var(--dreamlab-orange);
+  }
+
+  .z-index-fixed{
+    z-index: 10000;
   }
 
   .map-area {
