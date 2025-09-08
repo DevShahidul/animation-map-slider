@@ -47,26 +47,28 @@
   function initializeDraggableSlider() {
     if (state.draggableSliderInitialized) return;
 
+    // Clone last item to make sure to slide all items smoothly
+    cloneLastSlide();
+
     state.draggableSliderInitialized = true;
     state.draggableSliderInstance = createSwiperInstance();
+  }
+
+  function cloneLastSlide() {
+    const swiperWrapper = document.querySelector(`${config.selectors.swiper} .swiper-wrapper`);
+    const slides = swiperWrapper?.querySelectorAll('.swiper-slide');
     
-    // Add resize handler for responsive updates
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      // Debounce resize events
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        const slides = state.draggableSliderInstance.slides;
-        slides.forEach(slide => {
-          if (slide.classList.contains('expanded')) {
-            const newWidth = slide.offsetWidth;
-            gsap.set(slide, {
-              width: `${(newWidth * config.slideExpandMultiplier) / 16}rem`
-            });
-          }
-        });
-      }, 250); // Wait for 250ms after resize ends
-    });
+    if (slides?.length) {
+      // Clone the last slide
+      const lastSlide = slides[slides.length - 1];
+      const clonedSlide = lastSlide.cloneNode(true);
+      
+      // Add the extra-item class
+      clonedSlide.classList.add('extra-item');
+      
+      // Append it to the wrapper
+      swiperWrapper.appendChild(clonedSlide);
+    }
   }
 
   function createSwiperInstance() {
@@ -132,31 +134,17 @@
   function resetAllSlides(slides, baseWidth) {
     slides.forEach((slide) => {
       slide.classList.remove("expanded");
-      gsap.to(slide, {
-        width: `${baseWidth / 16}rem`,
-        duration: config.animationDurations.hover,
-        ease: "power2.out"
-      });
+      slide.style.width = `${baseWidth / 16}rem`;
     });
   }
 
   function expandSlide(slide, baseWidth) {
     slide.classList.add("expanded");
-    gsap.to(slide, {
-      width: `${(baseWidth * config.slideExpandMultiplier) / 16}rem`,
-      duration: config.animationDurations.hover,
-      ease: "power2.out",
-      onComplete: () => {
-        // Ensure width is properly set after animation for responsiveness
-        slide.style.width = `${(baseWidth * config.slideExpandMultiplier) / 16}rem`;
-      }
-    });
+    slide.style.width = `${(baseWidth * config.slideExpandMultiplier) / 16}rem`;
   }
 
   function expandFirstSlide(activeSlide) {
     const slideWidth = activeSlide.offsetWidth;
-    // Set initial width immediately to prevent flash
-    activeSlide.style.width = `${(slideWidth * config.slideExpandMultiplier) / 16}rem`;
     expandSlide(activeSlide, slideWidth);
   }
 
@@ -285,6 +273,8 @@
       if (elements.isValid) {
         animateToDropText(elements.pointerText);
 
+        slideItemsScaleDown(elements.slider);
+
         // Scale down the pointer
         gsap.to(elements.pointer, {
           scale: 0.8,
@@ -314,6 +304,9 @@
       const elements = getPointerElements();
       if (elements.isValid) {
         setTimeout(() => setPointerTextToDrag(elements.pointerText), 100);
+
+        resetSlideItemsScale(elements.slider);
+
         gsap.to(elements.pointer, {
           scale: 1,
           duration: config.animationDurations.pointer,
@@ -330,6 +323,28 @@
         handlePointerMove(event, elements.slider, elements.pointer);
       }
     };
+  }
+
+  function slideItemsScaleDown(swiper) {
+    const slideItems = swiper.querySelectorAll(".swiper-slide");
+    slideItems.forEach(slide => {
+        gsap.to(slide, {
+            scale: 0.95,
+            duration: config.animationDurations.pointer,
+            ease: "power2.out",
+        })
+    }); 
+  }
+
+  function resetSlideItemsScale(swiper) {
+    const slideItems = swiper.querySelectorAll(".swiper-slide");
+    slideItems.forEach(slide => {
+        gsap.to(slide, {
+            scale: 1,
+            duration: config.animationDurations.pointer,
+            ease: "power2.out",
+        })
+    }); 
   }
 
   function initializePointerText(pointerText) {

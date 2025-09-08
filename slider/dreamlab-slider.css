@@ -173,6 +173,10 @@
     background-color: var(--background);
     color: var(--forground);
     cursor: none;
+    &.extra-item{
+      opacity: 0;
+      visibility: hidden;
+    }
   }
 
   .slide-item {
