@@ -49,6 +49,24 @@
 
     state.draggableSliderInitialized = true;
     state.draggableSliderInstance = createSwiperInstance();
+    
+    // Add resize handler for responsive updates
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      // Debounce resize events
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const slides = state.draggableSliderInstance.slides;
+        slides.forEach(slide => {
+          if (slide.classList.contains('expanded')) {
+            const newWidth = slide.offsetWidth;
+            gsap.set(slide, {
+              width: `${(newWidth * config.slideExpandMultiplier) / 16}rem`
+            });
+          }
+        });
+      }, 250); // Wait for 250ms after resize ends
+    });
   }
 
   function createSwiperInstance() {
@@ -67,7 +85,7 @@
         touchStart: () => handleDragStart(),
         touchEnd: () => handleDragEnd(),
         sliderFirstMove: () => handleDragMove(),
-        sliderMove: (_, e) => handleSliderDrag(e),
+        sliderMove: (_, e) => handleDragSlider(e),
       },
     });
   }
@@ -114,17 +132,31 @@
   function resetAllSlides(slides, baseWidth) {
     slides.forEach((slide) => {
       slide.classList.remove("expanded");
-      slide.style.width = `${baseWidth / 16}rem`;
+      gsap.to(slide, {
+        width: `${baseWidth / 16}rem`,
+        duration: config.animationDurations.hover,
+        ease: "power2.out"
+      });
     });
   }
 
   function expandSlide(slide, baseWidth) {
     slide.classList.add("expanded");
-    slide.style.width = `${(baseWidth * config.slideExpandMultiplier) / 16}rem`;
+    gsap.to(slide, {
+      width: `${(baseWidth * config.slideExpandMultiplier) / 16}rem`,
+      duration: config.animationDurations.hover,
+      ease: "power2.out",
+      onComplete: () => {
+        // Ensure width is properly set after animation for responsiveness
+        slide.style.width = `${(baseWidth * config.slideExpandMultiplier) / 16}rem`;
+      }
+    });
   }
 
   function expandFirstSlide(activeSlide) {
     const slideWidth = activeSlide.offsetWidth;
+    // Set initial width immediately to prevent flash
+    activeSlide.style.width = `${(slideWidth * config.slideExpandMultiplier) / 16}rem`;
     expandSlide(activeSlide, slideWidth);
   }
 
@@ -236,7 +268,6 @@
   }
 
   function handleMouseUp(pointerText) {
-    console.log("I'm from handleMouseUp");
     if (!state.isDragging || !state.isHovering) return;
 
     state.isDragging = false;
@@ -276,8 +307,6 @@
     };
 
     window.handleDragEnd = function () {
-      console.log("I'm from window.handleDragEnd");
-
       if (!state.isHovering) return;
 
       state.isDragging = false;
@@ -293,7 +322,7 @@
       }
     };
 
-    window.handleSliderDrag = function (event) {
+    window.handleDragSlider = function (event) {
       state.isDragging = true;
       const elements = getPointerElements();
       if (elements.isValid) {
