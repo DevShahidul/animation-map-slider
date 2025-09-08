@@ -94,7 +94,7 @@
 }
 
 /* Slider area style */
-.dreamlab-dragable-slider-section {
+.dreamlab-draggable-slider-section {
   --spacing-y: 1.5rem;
   --space-between-area: 2rem;
   --slide-item-height: 28rem;
@@ -104,7 +104,49 @@
   padding-bottom: var(--spacing-y);
   overflow-x: hidden;
 
-  .swiper{
+  .pointer {
+    width: 6rem;
+    height: 6rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    z-index: 99;
+    pointer-events: none;
+    transform: scale(0);
+
+    .pointer-text {
+      font-weight: 500;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      text-transform: uppercase;
+      position: relative;
+      padding-right: 1.875rem;
+      .animated-ag,
+      .animated-op {
+        position: absolute;
+        right: 0;
+        span {
+          display: inline-block;
+          transform-origin: center bottom;
+        }
+      }
+
+      .static-dr {
+        opacity: 1;
+      }
+    }
+  }
+
+  .swiper {
     overflow: visible;
   }
 
@@ -112,7 +154,7 @@
     margin-top: var(--space-between-area);
   }
 
-  .swiper:not(.swiper-initialized){
+  .swiper:not(.swiper-initialized) {
     .swiper-wrapper {
       gap: 2rem;
     }
@@ -129,7 +171,7 @@
   .slide-item {
     height: var(--slide-item-height, 21.25rem);
     width: var(--item-width, 21.25rem);
-    transition: width 0.7s ease;
+    transition: width 0.6s ease-in-out;
     img {
       display: block;
       width: 100%;
@@ -152,9 +194,10 @@
     max-width: var(--item-width, 21.25rem);
     height: 100%;
     padding: 1.125rem;
+    padding-right: 0.5rem;
     padding-top: 1.5rem;
     box-sizing: border-box;
-    transition: all 0.4s ease;
+    transition: all 0.4s ease-in-out;
 
     .label {
       background-color: var(--forground);
@@ -206,13 +249,13 @@
 }
 
 @media screen and (min-width: 48rem) {
-  .dreamlab-dragable-slider-section {
+  .dreamlab-draggable-slider-section {
     --spacing-y: 4rem;
     --space-between-area: 3rem;
   }
 }
 @media screen and (min-width: 64rem) {
-  .dreamlab-dragable-slider-section {
+  .dreamlab-draggable-slider-section {
     --spacing-y: 5.125rem;
     --space-between-area: 5rem;
     .section-lead {
@@ -233,7 +276,7 @@
 }
 
 @media screen and (min-width: 75rem) {
-  .dreamlab-dragable-slider-section {
+  .dreamlab-draggable-slider-section {
     --space-between-area: 12.25rem;
     .section-lead {
       h2 {
