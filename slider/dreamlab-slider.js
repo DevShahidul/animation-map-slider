@@ -1,323 +1,416 @@
 (function () {
   "use strict";
 
-  let draggableSliderInitilize = false;
-  let draggableSliderInstance = null;
-  let baseSlideWidth = null;
-  let pointerInitialized = false;
+  // State management
+  const state = {
+    draggableSliderInitialized: false,
+    draggableSliderInstance: null,
+    baseSlideWidth: null,
+    pointerInitialized: false,
+    isDragging: false,
+    isHovering: false,
+  };
 
-  document.addEventListener("DOMContentLoaded", () => {
+  // Configuration
+  const config = {
+    spaceBetween: 32,
+    slideExpandMultiplier: 2,
+    animationDurations: {
+      hover: 0.3,
+      pointer: 0.2,
+      textTransition: 0.3,
+      textStagger: 0.05,
+    },
+    selectors: {
+      sliderSection: ".dreamlab-draggable-slider-section",
+      swiper: ".draggable-swiper-slider",
+      pointer: "#pointer",
+      pointerText: ".pointer-text",
+      staticDr: ".static-dr",
+      animatedAG: ".animated-ag",
+      animatedOP: ".animated-op",
+    },
+  };
+
+  // Initialize on DOM load
+  document.addEventListener("DOMContentLoaded", initializeApp);
+
+  function initializeApp() {
     const draggableSliderSection = document.querySelector(
-      ".dreamlab-draggable-slider-section"
+      config.selectors.sliderSection
     );
     if (!draggableSliderSection) return;
 
-    initializedraggableSlider();
-  });
+    initializeDraggableSlider();
+  }
 
-  function initializedraggableSlider() {
-    if (draggableSliderInitilize) return;
-    draggableSliderInitilize = true;
+  function initializeDraggableSlider() {
+    if (state.draggableSliderInitialized) return;
 
-    draggableSliderInstance = new Swiper(".draggable-swiper-slider", {
-      spaceBetween: 32,
+    state.draggableSliderInitialized = true;
+    state.draggableSliderInstance = createSwiperInstance();
+  }
+
+  function createSwiperInstance() {
+    return new Swiper(config.selectors.swiper, {
+      spaceBetween: config.spaceBetween,
       slidesPerView: 1,
       allowTouchMove: true,
       grabCursor: false,
       breakpoints: {
-        640: {
-          slidesPerView: 2,
-        },
-        1024: {
-          slidesPerView: 3,
-        },
-        1280: {
-          slidesPerView: 4,
-        },
+        640: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+        1280: { slidesPerView: 4 },
       },
       on: {
-        init: function () {
-          const slides = this.slides;
-          const activeIndex = this.activeIndex;
-          const activeSlide = slides[activeIndex];
-          baseSlideWidth = activeSlide.offsetWidth;
-
-          setTimeout(() => {
-            addExpandOnFirstItem(activeSlide);
-            initializeHoverOnslide(slides);
-            if (!pointerInitialized) {
-              initializePointerEffect(this);
-              pointerInitialized = true;
-            }
-          }, 100);
-        },
-        touchStart: function () {
-          handleDragStart();
-        },
-        touchEnd: function () {
-          handleDragEnd();
-        },
-        sliderFirstMove: function () {
-          handleDragMove();
-        },
+        init: handleSwiperInit,
+        touchStart: () => handleDragStart(),
+        touchEnd: () => handleDragEnd(),
+        sliderFirstMove: () => handleDragMove(),
+        sliderMove: (_, e) => handleSliderDrag(e),
       },
     });
   }
 
-  function initializeHoverOnslide(slides) {
-    if (!slides) return;
+  function handleSwiperInit() {
+    const slides = this.slides;
+    const activeSlide = slides[this.activeIndex];
+
+    if (!activeSlide) return;
+
+    state.baseSlideWidth = activeSlide.offsetWidth;
+
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
+      expandFirstSlide(activeSlide);
+      initializeSlideHoverEffects(slides);
+
+      if (!state.pointerInitialized) {
+        initializePointerSystem();
+        state.pointerInitialized = true;
+      }
+    });
+  }
+
+  function initializeSlideHoverEffects(slides) {
+    if (!slides?.length) return;
 
     slides.forEach((slide) => {
       const slideWidth = slide.offsetWidth;
-      setWidthProperty(slide, slideWidth);
-
-      slide.addEventListener("mouseenter", () => {
-        if (hasClass(slide)) return;
-        // Remove "expanded" from all slides
-        slides.forEach((s) => {
-          s.classList.remove("expanded");
-          s.style.width = `${slideWidth / 16}rem`;
-        });
-
-        // Add "expanded" to the hovered one
-        slide.classList.add("expanded");
-        slide.style.width = `${(slideWidth * 2) / 16}rem`;
-      });
+      setSlideWidthProperty(slide, slideWidth);
+      attachSlideHoverListeners(slide, slides, slideWidth);
     });
   }
 
-  function addExpandOnFirstItem(activeItem) {
-    const slideWidth = activeItem.offsetWidth;
-    activeItem.classList.add("expanded");
-    activeItem.style.width = `${(slideWidth * 2) / 16}rem`;
+  function attachSlideHoverListeners(slide, allSlides, slideWidth) {
+    slide.addEventListener("mouseenter", () => {
+      if (slide.classList.contains("expanded")) return;
+
+      resetAllSlides(allSlides, slideWidth);
+      expandSlide(slide, slideWidth);
+    });
   }
 
-  function setWidthProperty(el, width) {
-    el.style.setProperty("--item-width", `${width / 16}rem`);
+  function resetAllSlides(slides, baseWidth) {
+    slides.forEach((slide) => {
+      slide.classList.remove("expanded");
+      slide.style.width = `${baseWidth / 16}rem`;
+    });
   }
 
-  function hasClass(el, className = "expanded") {
-    return el.classList.contains(className);
+  function expandSlide(slide, baseWidth) {
+    slide.classList.add("expanded");
+    slide.style.width = `${(baseWidth * config.slideExpandMultiplier) / 16}rem`;
   }
 
-  function initializePointerEffect() {
-    const pointer = document.getElementById("pointer");
-    const slider = document.querySelector(".draggable-swiper-slider");
+  function expandFirstSlide(activeSlide) {
+    const slideWidth = activeSlide.offsetWidth;
+    expandSlide(activeSlide, slideWidth);
+  }
 
-    if (!pointer || !slider) {
-      console.warn("Pointer or slider element not found");
-      return;
+  function setSlideWidthProperty(element, width) {
+    element.style.setProperty("--item-width", `${width / 16}rem`);
+  }
+
+  function initializePointerSystem() {
+    const elements = getPointerElements();
+    if (!elements.isValid) return;
+
+    initializePointerText(elements.pointerText);
+    attachPointerEventListeners(elements);
+    setupGlobalDragHandlers();
+  }
+
+  function getPointerElements() {
+    const pointer = document.querySelector(config.selectors.pointer);
+    const slider = document.querySelector(config.selectors.swiper);
+    const pointerText = pointer?.querySelector(config.selectors.pointerText);
+
+    const isValid = pointer && slider && pointerText;
+
+    if (!isValid) {
+      console.warn("Required pointer elements not found");
     }
 
-    // Create spans for letters "a" and "g"
-    const pointerText = pointer.querySelector(".pointer-text");
+    return { pointer, slider, pointerText, isValid };
+  }
 
-    if (!pointerText) {
-      console.warn("Pointer text element not found");
-      return;
-    }
+  function attachPointerEventListeners(elements) {
+    const { pointer, slider, pointerText } = elements;
 
-    // Initialize with "ag" letters
-    initializePointerText(pointerText);
+    // Mouse enter/leave handlers
+    slider.addEventListener("mouseenter", () => handlePointerEnter(pointer));
+    slider.addEventListener("mouseleave", () =>
+      handlePointerLeave(pointer, pointerText)
+    );
 
-    // State tracking
-    let isDragging = false;
-    let isHovering = false;
+    // Mouse move handler - works during both hover and drag
+    slider.addEventListener("mousemove", (e) =>
+      handlePointerMove(e, slider, pointer)
+    );
 
-    // Scale in pointer on hover
-    slider.addEventListener("mouseenter", (e) => {
-      isHovering = true;
-      gsap.to(pointer, {
-        scale: 1,
-        duration: 0.3,
-        ease: "back.out(1.7)",
-      });
+    // Mouse drag handlers for non-touch devices
+    slider.addEventListener("mousedown", (e) =>
+      handleMouseDown(e, pointerText)
+    );
+    document.addEventListener("mouseup", () => handleMouseUp(pointerText));
+
+    // Global mousemove for tracking during drag
+    document.addEventListener("mousemove", (e) => {
+      if (state.isDragging && state.isHovering) {
+        handlePointerMove(e, slider, pointer);
+      }
     });
 
-    // Scale out on leave
-    slider.addEventListener("mouseleave", (e) => {
-      isHovering = false;
-      isDragging = false;
+    // Prevent context menu on right click during drag
+    slider.addEventListener("contextmenu", (e) => {
+      if (state.isDragging) e.preventDefault();
+    });
+  }
 
-      gsap.to(pointer, {
-        scale: 0,
-        duration: 0.3,
-        ease: "back.in(1.7)",
-      });
+  function handlePointerEnter(pointer) {
+    state.isHovering = true;
+    gsap.to(pointer, {
+      scale: 1,
+      duration: config.animationDurations.hover,
+      ease: "back.out(1.7)",
+    });
+  }
 
-      // Reset text on leave
-      setTimeout(() => {
-        setPointerTextToDrag(pointerText);
-      }, 100);
+  function handlePointerLeave(pointer, pointerText) {
+    state.isHovering = false;
+    state.isDragging = false;
+
+    gsap.to(pointer, {
+      scale: 0,
+      duration: config.animationDurations.hover,
+      ease: "back.in(1.7)",
     });
 
-    // Move pointer with mouse
-    slider.addEventListener("mousemove", (e) => {
-      if (!isHovering) return;
+    // Reset text after animation
+    setTimeout(() => setPointerTextToDrag(pointerText), 100);
+  }
 
-      const rect = slider.getBoundingClientRect();
-      const x = e.clientX - rect.left - pointer.offsetWidth / 2;
-      const y = e.clientY - rect.top - pointer.offsetHeight / 2;
+  function handlePointerMove(event, slider, pointer) {
+    if (!state.isHovering) return;
 
-      gsap.to(pointer, {
-        x: x,
-        y: y,
-        duration: 0.2,
-        ease: "power2.out",
-      });
+    const rect = slider.getBoundingClientRect();
+    const x = event.clientX - rect.left - pointer.offsetWidth / 2;
+    const y = event.clientY - rect.top - pointer.offsetHeight / 2;
+
+    gsap.to(pointer, {
+      x: x,
+      y: y,
+      duration: config.animationDurations.pointer,
+      ease: "power2.out",
     });
+  }
 
-    // Golbal drag handles that work with swiper events
+  function handleMouseDown(event, pointerText) {
+    if (!state.isHovering) return;
+
+    // Only handle left mouse button
+    if (event.button !== 0) return;
+    state.isDragging = true;
+    animateToDropText(pointerText);
+  }
+
+  function handleMouseUp(pointerText) {
+    console.log("I'm from handleMouseUp");
+    if (!state.isDragging || !state.isHovering) return;
+
+    state.isDragging = false;
+    setTimeout(() => setPointerTextToDrag(pointerText), 100);
+  }
+
+  function setupGlobalDragHandlers() {
+    // Global handlers for Swiper touch events
     window.handleDragStart = function () {
-      if (!isHovering) return;
-      isDragging = true;
-      animateToDropDrag(pointerText);
+      if (!state.isHovering) return;
+
+      state.isDragging = true;
+      // Get elements for pointer movement
+      const elements = getPointerElements();
+      if (elements.isValid) {
+        animateToDropText(elements.pointerText);
+
+        // Scale down the pointer
+        gsap.to(elements.pointer, {
+          scale: 0.8,
+          duration: config.animationDurations.pointer,
+          ease: "power2.out",
+        });
+      }
     };
 
-    window.handleDragMove = function () {
-      if (!isHovering) return;
-      if (!isDragging) {
-        isDragging = true;
-        animateToDropDrag(pointerText);
+    window.handleDragMove = function (event) {
+      if (!state.isHovering) return;
+
+      if (!state.isDragging) {
+        state.isDragging = true;
+        const elements = getPointerElements();
+        if (elements.isValid) {
+          animateToDropText(elements.pointerText);
+        }
       }
     };
 
     window.handleDragEnd = function () {
-      if (!isHovering) return;
-      isDragging = false;
-      setTimeout(() => {
-        setPointerTextToDrag(pointerText);
-      }, 100);
+      console.log("I'm from window.handleDragEnd");
+
+      if (!state.isHovering) return;
+
+      state.isDragging = false;
+      // Get elements to scale up the pointer
+      const elements = getPointerElements();
+      if (elements.isValid) {
+        setTimeout(() => setPointerTextToDrag(elements.pointerText), 100);
+        gsap.to(elements.pointer, {
+          scale: 1,
+          duration: config.animationDurations.pointer,
+          ease: "power2.out",
+        });
+      }
     };
 
-    // Fallback mose events for non-touch devices
-
-    slider.addEventListener("mousedown", (e) => {
-      if (!isHovering) return;
-      isDragging = true;
-      animateToDropDrag(pointerText);
-    });
-
-    document.addEventListener("mouseup", (e) => {
-      if (isDragging && isHovering) {
-        isDragging = false;
-        setTimeout(() => {
-          setPointerTextToDrag(pointerText);
-        }, 100);
+    window.handleSliderDrag = function (event) {
+      state.isDragging = true;
+      const elements = getPointerElements();
+      if (elements.isValid) {
+        // Immediately update pointer position on mousedown
+        handlePointerMove(event, elements.slider, elements.pointer);
       }
-    });
+    };
   }
 
-  // Initialize pointer text with "ag" letters
   function initializePointerText(pointerText) {
-    const existingAG = pointerText.querySelector(".animated-ag");
-    const existingOP = pointerText.querySelector(".animated-op");
+    cleanupExistingTextElements(pointerText);
 
-    if (existingAG) existingAG.remove();
-    if (existingOP) existingOP.remove();
-
-    // Create and add "ag" element
-    const animatedAG = document.createElement("span");
-    animatedAG.classList.add("animated-ag", "d-inline-flex");
-    animatedAG.innerHTML = "<span>a</span><span>g</span>";
+    const animatedAG = createTextElement(
+      "animated-ag",
+      "<span>a</span><span>g</span>"
+    );
     pointerText.appendChild(animatedAG);
 
-    // Set initial state
-    gsap.set(animatedAG.children, {
-      y: 0,
-      opacity: 1,
-    });
+    gsap.set(animatedAG.children, { y: 0, opacity: 1 });
   }
 
-  // Animate text to "Drop Drag"
-  function animateToDropDrag(pointerText) {
-    const existingOP = pointerText.querySelector(".animated-op");
-    if (existingOP) existingOP.remove();
+  function cleanupExistingTextElements(pointerText) {
+    const existingElements = [
+      pointerText.querySelector(config.selectors.animatedAG),
+      pointerText.querySelector(config.selectors.animatedOP),
+    ];
 
-    const ag = pointerText.querySelector(".animated-ag");
+    existingElements.forEach((el) => el?.remove());
+  }
 
-    // Animate out "ag" letters (reverse animation)
-    if (ag && ag.children.length > 0) {
+  function createTextElement(className, innerHTML) {
+    const element = document.createElement("span");
+    element.classList.add(className, "d-inline-flex");
+    element.innerHTML = innerHTML;
+    return element;
+  }
+
+  function animateToDropText(pointerText) {
+    const existingOP = pointerText.querySelector(config.selectors.animatedOP);
+    existingOP?.remove();
+
+    const ag = pointerText.querySelector(config.selectors.animatedAG);
+
+    // Animate out "ag" letters
+    if (ag?.children.length > 0) {
       gsap.to([...ag.children], {
         y: 25,
         opacity: 0,
-        duration: 0.3,
-        stagger: 0.05,
+        duration: config.animationDurations.textTransition,
+        stagger: config.animationDurations.textStagger,
         ease: "power2.in",
-        onComplete: () => {
-          ag.remove();
-        },
+        onComplete: () => ag.remove(),
       });
     }
 
-    // Create and add "op" letters
-    const animatedOP = document.createElement("span");
-    animatedOP.classList.add("animated-op", "d-inline-flex");
-    animatedOP.innerHTML = "<span>o</span><span>p</span>";
+    // Create and animate in "op" letters
+    const animatedOP = createTextElement(
+      "animated-op",
+      "<span>o</span><span>p</span>"
+    );
+    insertAfterStaticDr(pointerText, animatedOP);
 
-    // Insert after static "dr" element
-    const staticDr = pointerText.querySelector(".static-dr");
-    if (staticDr) {
-      staticDr.parentNode.insertBefore(animatedOP, staticDr.nextSibling);
-    } else {
-      pointerText.appendChild(animatedOP);
-    }
-
-    // Animate in "op" letters with stagger
     gsap.fromTo(
       animatedOP.children,
-      {
-        y: -25,
-        opacity: 0,
-      },
+      { y: -25, opacity: 0 },
       {
         y: 0,
         opacity: 1,
         duration: 0.4,
-        stagger: 0.05,
+        stagger: config.animationDurations.textStagger,
         ease: "power2.in",
       }
     );
   }
 
-  // Reset to original "Drag"
-  function setPointerTextToDrag(pointerText) {
-    const op = pointerText.querySelector(".animated-op");
-    const existingAG = pointerText.querySelector(".animated-ag");
+  function insertAfterStaticDr(pointerText, element) {
+    const staticDr = pointerText.querySelector(config.selectors.staticDr);
+    if (staticDr) {
+      staticDr.parentNode.insertBefore(element, staticDr.nextSibling);
+    } else {
+      pointerText.appendChild(element);
+    }
+  }
 
-    // Animate out "op" letters if they exist
-    if (op && op.children.length > 0) {
+  function setPointerTextToDrag(pointerText) {
+    const op = pointerText.querySelector(config.selectors.animatedOP);
+    const existingAG = pointerText.querySelector(config.selectors.animatedAG);
+
+    // Animate out "op" letters
+    if (op?.children.length > 0) {
       gsap.to(op.children, {
         y: -25,
         opacity: 0,
-        duration: 0.3,
-        stagger: 0.05,
+        duration: config.animationDurations.textTransition,
+        stagger: config.animationDurations.textStagger,
         ease: "power2.in",
-        onComplete: () => {
-          op.remove();
-        },
+        onComplete: () => op.remove(),
       });
     }
 
-    // Restore "ag" if missing
+    // Restore "ag" letters if missing
     if (!existingAG) {
       setTimeout(() => {
-        const animatedAG = document.createElement("span");
-        animatedAG.classList.add("animated-ag");
-        animatedAG.innerHTML = "<span>a</span><span>g</span>";
+        const animatedAG = createTextElement(
+          "animated-ag",
+          "<span>a</span><span>g</span>"
+        );
         pointerText.appendChild(animatedAG);
 
         gsap.fromTo(
           [...animatedAG.children],
-          {
-            y: 20,
-            opacity: 0,
-          },
+          { y: 20, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.3,
-            stagger: 0.05,
+            duration: config.animationDurations.textTransition,
+            stagger: config.animationDurations.textStagger,
             ease: "power2.out",
           }
         );
