@@ -1,0 +1,250 @@
+:root {
+  --dreamlab-map-section-bg: #0b3d2a;
+  --dreamlab-green: #9ee9a8;
+
+  --dreamlab-light-text: #82a293;
+  --dreamlab-light-lime: #bbfbed;
+  --dreamlab-lime: #9eeba6;
+  --dreamlab-blue: #376bdd;
+  --dreamlab-cream: #ffecb3;
+  --dreamlab-orange: #de6436;
+  --dreamlab-slider-section-bg: #efefef;
+
+  --dreamlab-heading2-size-sm: 1.75rem;
+  --dreamlab-heading2-size-md: 2rem;
+  --dreamlab-heading2-size-lg: 2.5rem;
+  --dreamlab-heading2-size-xl: 2.75rem;
+}
+
+/*BUTTONS */
+.btn {
+  --bs-btn-padding-x: 2rem;
+  --bs-btn-padding-y: 1rem;
+  --bs-btn-font-family: Inter, sans-serif;
+  --bs-btn-font-size: 1rem;
+  --bs-btn-font-weight: 500;
+  --bs-btn-line-height: 1.5;
+  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-width: 1px;
+  --bs-btn-border-color: transparent;
+  --bs-btn-border-radius: 0.313rem;
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-box-shadow: none;
+  --bs-btn-disabled-opacity: 0.65;
+  --bs-btn-focus-box-shadow: 0 0 0 0.25rem
+    rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
+  display: inline-block;
+  padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
+  font-family: var(--bs-btn-font-family);
+  font-size: var(--bs-btn-font-size);
+  font-weight: var(--bs-btn-font-weight);
+  line-height: var(--bs-btn-line-height);
+  color: var(--bs-btn-color);
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+  border-radius: var(--bs-btn-border-radius);
+  background-color: var(--bs-btn-bg);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-dark {
+  --bs-btn-color: #202124;
+  --bs-btn-border-color: #202124;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #202124;
+  --bs-btn-hover-border-color: #202124;
+  --bs-btn-focus-shadow-rgb: 32, 33, 36;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #202124;
+  --bs-btn-active-border-color: #202124;
+  --bs-btn-active-shadow: none;
+  --bs-btn-disabled-color: #202124;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #202124;
+  --bs-gradient: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+.btn:hover {
+  color: var(--bs-btn-hover-color);
+  background-color: var(--bs-btn-hover-bg);
+  border-color: var(--bs-btn-hover-border-color);
+}
+
+.btn:focus-visible {
+  color: var(--bs-btn-hover-color);
+  background-color: var(--bs-btn-hover-bg);
+  border-color: var(--bs-btn-hover-border-color);
+  outline: 0;
+  -webkit-box-shadow: var(--bs-btn-focus-box-shadow);
+  box-shadow: var(--bs-btn-focus-box-shadow);
+}
+
+/* Slider area style */
+.dreamlab-dragable-slider-section {
+  --spacing-y: 1.5rem;
+  --space-between-area: 2rem;
+  --slide-item-height: 28rem;
+  --slide-item-width: 21.25rem;
+  background-color: var(--dreamlab-slider-section-bg);
+  padding-top: var(--spacing-y);
+  padding-bottom: var(--spacing-y);
+  overflow-x: hidden;
+
+  .swiper{
+    overflow: visible;
+  }
+
+  .slider-area {
+    margin-top: var(--space-between-area);
+  }
+
+  .swiper:not(.swiper-initialized){
+    .swiper-wrapper {
+      gap: 2rem;
+    }
+  }
+
+  .swiper-slide {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: var(--background);
+    color: var(--forground);
+  }
+
+  .slide-item {
+    height: var(--slide-item-height, 21.25rem);
+    width: var(--item-width, 21.25rem);
+    transition: width 0.7s ease;
+    img {
+      display: block;
+      width: 100%;
+      max-width: var(--item-width, 21.25rem);
+      height: auto;
+      position: absolute;
+      height: 100%;
+      object-fit: cover;
+      right: 0;
+      top: 0;
+    }
+    &.expanded {
+      width: calc(var(--item-width, 21.25rem) * 2);
+    }
+  }
+
+  /* Content Area - Initially Collapsed */
+  .slide-content {
+    width: 100%;
+    max-width: var(--item-width, 21.25rem);
+    height: 100%;
+    padding: 1.125rem;
+    padding-top: 1.5rem;
+    box-sizing: border-box;
+    transition: all 0.4s ease;
+
+    .label {
+      background-color: var(--forground);
+      padding: 0.375rem 0.5rem;
+      color: var(--background);
+      border-radius: 0.25rem;
+      letter-spacing: 0.2em;
+      font-size: 0.75rem;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+    h3 {
+      margin-top: 1rem;
+      text-transform: capitalize;
+      margin-bottom: 3rem;
+    }
+    .btn {
+      position: relative;
+      z-index: 9;
+      .icon {
+        color: var(--forground);
+        background-color: var(--background);
+        border-radius: 1rem;
+        transition: all 0.5s ease;
+        svg {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+      }
+      span {
+        color: white;
+        transition: color 0.5s ease;
+      }
+    }
+  }
+
+  /* When expanded */
+  .swiper-slide.expanded .slide-content {
+    .btn {
+      .icon {
+        background-color: var(--forground);
+        color: var(--background);
+      }
+      span {
+        color: var(--forground);
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 48rem) {
+  .dreamlab-dragable-slider-section {
+    --spacing-y: 4rem;
+    --space-between-area: 3rem;
+  }
+}
+@media screen and (min-width: 64rem) {
+  .dreamlab-dragable-slider-section {
+    --spacing-y: 5.125rem;
+    --space-between-area: 5rem;
+    .section-lead {
+      h2 {
+        max-width: 28rem;
+        font-size: var(--dreamlab-heading2-size-lg);
+      }
+      .content {
+        max-width: 24rem;
+      }
+    }
+    .slide-content {
+      h3 {
+        margin-top: 1.5rem;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 75rem) {
+  .dreamlab-dragable-slider-section {
+    --space-between-area: 12.25rem;
+    .section-lead {
+      h2 {
+        font-size: var(--dreamlab-heading2-size-xl);
+      }
+    }
+
+    .slide-content {
+      h3 {
+        margin-top: 2rem;
+      }
+    }
+  }
+}
