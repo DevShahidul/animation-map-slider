@@ -119,6 +119,7 @@
     z-index: 99;
     pointer-events: none;
     transform: scale(0);
+    cursor: none;
 
     .pointer-text {
       font-weight: 500;
@@ -146,6 +147,10 @@
     }
   }
 
+  .draggable-swiper-slider{
+    cursor: none;
+  }
+
   .swiper {
     overflow: visible;
   }
@@ -163,15 +168,16 @@
   .swiper-slide {
     position: relative;
     overflow: hidden;
-    cursor: pointer;
     background-color: var(--background);
     color: var(--forground);
+    cursor: none;
   }
 
   .slide-item {
     height: var(--slide-item-height, 21.25rem);
     width: var(--item-width, 21.25rem);
     transition: width 0.6s ease-in-out;
+    cursor: none;
     img {
       display: block;
       width: 100%;
