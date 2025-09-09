@@ -20,6 +20,7 @@
       pointer: 0.2,
       textTransition: 0.3,
       textStagger: 0.05,
+      slide: 0.4,
     },
     selectors: {
       sliderSection: ".dreamlab-draggable-slider-section",
@@ -179,13 +180,23 @@
   function resetAllSlides(slides, baseWidth) {
     slides.forEach((slide) => {
       slide.classList.remove("expanded");
-      slide.style.width = `${baseWidth / 16}rem`;
+      // slide.style.width = `${baseWidth / 16}rem`;
+      gsap.to(slide, {
+        width: `${baseWidth / 16}rem`,
+        duration: config.animationDurations.slide,
+        ease: "power2.out"
+      });
     });
   }
 
-  function expandSlide(slide, baseWidth) {    
+  function expandSlide(slide, baseWidth) {
+    const expandedWidth = (baseWidth * config.slideExpandMultiplier) / 16;
     slide.classList.add("expanded");
-    slide.style.width = `${(baseWidth * config.slideExpandMultiplier) / 16}rem`;
+    gsap.to(slide, {
+      width: `${expandedWidth}rem`,
+      duration: config.animationDurations.slide,
+      ease: "power2.out",
+    });
   }
 
   function getSwiperSlideWidth() {    
