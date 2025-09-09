@@ -35,9 +35,6 @@
     const controlItems = mapSection.querySelectorAll(".nav-control-item");
 
     controlItems.forEach((item) => {
-      // Setup initial states for indicators
-      // setupControlIndicators(item);  // For now don't need because I have added animation with css
-
       item.addEventListener("click", () => {
         activateControlItem(item, controlItems);
 
@@ -48,57 +45,14 @@
     });
   }
 
-  function setupControlIndicators(controlItem) {
-    const indicators = controlItem.querySelectorAll(".indecators span");
-
-    if (indicators.length > 0) {
-      gsap.set(indicators, {
-        scaleX: 0,
-        transformOrigin: "right center",
-        opacity: 0.6,
-      });
-
-      // Animate active state if item has active class
-      if (controlItem.classList.contains("active")) {
-        animateControlIndicators(indicators, true);
-      }
-    }
-  }
-
   function activateControlItem(activeItem, allItems) {
     // Remove active class and animate indicators out
     allItems.forEach((item) => {
       item.classList.remove("active");
-      // const indicators = item.querySelectorAll(".indecators span");  // For now don't need to do this because I have added animation with css
-      // animateControlIndicators(indicators, false);
     });
 
     // Add active class and animate indicators in
     activeItem.classList.add("active");
-    // const activeIndicators = activeItem.querySelectorAll(".indecators span"); // For now don't need to do this because I have added animation with css
-    // animateControlIndicators(activeIndicators, true);
-  }
-
-  function animateControlIndicators(indicators, isActive) {
-    if (indicators.length === 0) return;
-
-    if (isActive) {
-      gsap.to(indicators, {
-        // scaleX: 1,
-        opacity: 1,
-        duration: 0.8,
-        // stagger: 0.1,
-        ease: "power2.out",
-        transformOrigin: "right center",
-      });
-    } else {
-      gsap.to(indicators, {
-        // scaleX: 0.5,
-        opacity: 0.6,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
   }
 
   function activateNavControl(pathElement) {
@@ -158,46 +112,6 @@
       attachEventListeners(area, elements, index);
       setupIndicatorClickHandler(area, index);
     });
-  }
-
-  function initializeAreasData() {
-    return [
-      {
-        areaName: "Midwest",
-        areaImage: "https://picsum.photos/id/1043/800/400",
-        guideImage: "https://picsum.photos/id/1011/100/100",
-        climateInfo: "Hot summers, cold winters",
-        description: "The heartland of the United States.",
-      },
-      {
-        areaName: "Canada West",
-        areaImage: "https://picsum.photos/id/1015/800/400",
-        guideImage: "https://picsum.photos/id/1005/100/100",
-        climateInfo: "Cold winters, mild summers",
-        description: "Explore the beauty of Western Canada.",
-      },
-      {
-        areaName: "Canada East",
-        areaImage: "https://picsum.photos/id/1021/800/400",
-        guideImage: "https://picsum.photos/id/1001/100/100",
-        climateInfo: "Humid summers, snowy winters",
-        description: "Discover Eastern Canada's rich culture.",
-      },
-      {
-        areaName: "US West",
-        areaImage: "https://picsum.photos/id/1035/800/400",
-        guideImage: "https://picsum.photos/id/1006/100/100",
-        climateInfo: "Warm, dry climate",
-        description: "From California beaches to Nevada deserts.",
-      },
-      {
-        areaName: "US East",
-        areaImage: "https://picsum.photos/id/1052/800/400",
-        guideImage: "https://picsum.photos/id/1012/100/100",
-        climateInfo: "Mild climate with four seasons",
-        description: "Home to New York, Washington D.C., and Boston.",
-      },
-    ];
   }
 
   function animateSlider(shouldOpen = true) {
@@ -590,27 +504,15 @@
       const bbox = path.getBBox();
       const patternId = `${path.id}-img`;
       const pattern = document.getElementById(patternId);
-      const patternImg = document.getElementById(`${path.id}-clip-img`);
-      const pathPoints = path.getAttribute("d");
 
       if (pattern) {
         // Calculate scale to fit the path's bounding box
         const scale = Math.max(bbox.width, bbox.height);
-        const width = Math.floor(bbox.width) * 1.2;
-        const height = Math.floor(bbox.height) * 1.25;
         // Set pattern transform to scale and position relative to the path
         pattern.setAttribute(
           "patternTransform",
           `translate(${bbox.x},${bbox.y}) scale(${scale})`
         );
-
-        // patternImg.setAttribute(
-        //   "transform",
-        //   `translate(${bbox.x},${bbox.y})`
-        // );
-
-        // patternImg.setAttribute("width", `${width}`)
-        // patternImg.setAttribute("height", `${height}`)
 
         path.setAttribute("fill", `url(#${patternId})`);
       }
