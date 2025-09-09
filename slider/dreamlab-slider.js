@@ -48,27 +48,71 @@
     if (state.draggableSliderInitialized) return;
 
     // Clone last item to make sure to slide all items smoothly
-    cloneLastSlide();
+    cloneLastSlideWithcheckWindowSize();
 
     state.draggableSliderInitialized = true;
     state.draggableSliderInstance = createSwiperInstance();
   }
 
   function cloneLastSlide() {
-    const swiperWrapper = document.querySelector(`${config.selectors.swiper} .swiper-wrapper`);
-    const slides = swiperWrapper?.querySelectorAll('.swiper-slide');
-    
-    if (slides?.length) {
-      // Clone the last slide
-      const lastSlide = slides[slides.length - 1];
-      const clonedSlide = lastSlide.cloneNode(true);
-      
-      // Add the extra-item class
-      clonedSlide.classList.add('extra-item');
-      
-      // Append it to the wrapper
-      swiperWrapper.appendChild(clonedSlide);
+    const swiperWrapper = document.querySelector(
+      `${config.selectors.swiper} .swiper-wrapper`
+    );
+    const slides = swiperWrapper?.querySelectorAll(".swiper-slide");
+
+    // Exit if swiperWrapper doesn't exist
+    if (!swiperWrapper || !slides.length) return;
+
+    // Check if an extra-item already exists
+    const hasExtraItem = swiperWrapper.querySelector(
+      ".swiper-slide.extra-item"
+    );
+    if (hasExtraItem) return; // Exit early if it exists
+
+    // Clone the last slide
+    const lastSlide = slides[slides.length - 1];
+    const clonedSlide = lastSlide.cloneNode(true);
+
+    // Add the extra-item class
+    clonedSlide.classList.add("extra-item");
+
+    // Append it to the wrapper
+    swiperWrapper.appendChild(clonedSlide);
+  }
+
+  function removeClonedSlides() {
+    const swiperWrapper = document.querySelector(
+      `${config.selectors.swiper} .swiper-wrapper`
+    );
+    if (!swiperWrapper) return;
+
+    const extraItems = swiperWrapper.querySelectorAll(
+      ".swiper-slide.extra-item"
+    );
+    extraItems.forEach((item) => item.remove());
+  }
+
+  function cloneLastSlideWithcheckWindowSize() {
+    if (window.innerWidth >= 1024) {
+      cloneLastSlide();
+    } else {
+      removeClonedSlides();
     }
+  }
+
+  window.addEventListener(
+    "resize",
+    debounce(cloneLastSlideWithcheckWindowSize, 200)
+  );
+
+  function debounce(func, delay) {
+    let timeoutId;
+    return function () {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, arguments);
+      }, delay);
+    };
   }
 
   function createSwiperInstance() {
@@ -98,7 +142,7 @@
 
     if (!activeSlide) return;
 
-    state.baseSlideWidth = activeSlide.offsetWidth;
+    state.baseSlideWidth = getSwiperSlideWidth();
 
     // Use requestAnimationFrame for better performance
     requestAnimationFrame(() => {
@@ -114,9 +158,10 @@
 
   function initializeSlideHoverEffects(slides) {
     if (!slides?.length) return;
+    const slideWidth = getSwiperSlideWidth();
+    if (!slideWidth) return;
 
     slides.forEach((slide) => {
-      const slideWidth = slide.offsetWidth;
       setSlideWidthProperty(slide, slideWidth);
       attachSlideHoverListeners(slide, slides, slideWidth);
     });
@@ -138,13 +183,29 @@
     });
   }
 
-  function expandSlide(slide, baseWidth) {
+  function expandSlide(slide, baseWidth) {    
     slide.classList.add("expanded");
     slide.style.width = `${(baseWidth * config.slideExpandMultiplier) / 16}rem`;
   }
 
+  function getSwiperSlideWidth() {    
+    if (!state.draggableSliderInstance) return null;
+
+    // Get the base slide width from Swiper's parameters
+    const swiperWidth = state.draggableSliderInstance.width;
+    const slidesPerView = state.draggableSliderInstance.params.slidesPerView;
+    const spaceBetween = state.draggableSliderInstance.params.spaceBetween;
+
+    // Calculate single slide width considering the space between slides
+    const totalSpaceBetween = spaceBetween * (Math.floor(slidesPerView) - 1);
+    const slideWidth = (swiperWidth - totalSpaceBetween) / slidesPerView;
+
+    return slideWidth;
+  }
+
   function expandFirstSlide(activeSlide) {
-    const slideWidth = activeSlide.offsetWidth;
+    if (!activeSlide) return;
+    const slideWidth = getSwiperSlideWidth();
     expandSlide(activeSlide, slideWidth);
   }
 
@@ -327,24 +388,24 @@
 
   function slideItemsScaleDown(swiper) {
     const slideItems = swiper.querySelectorAll(".swiper-slide");
-    slideItems.forEach(slide => {
-        gsap.to(slide, {
-            scale: 0.95,
-            duration: config.animationDurations.pointer,
-            ease: "power2.out",
-        })
-    }); 
+    slideItems.forEach((slide) => {
+      gsap.to(slide, {
+        scale: 0.95,
+        duration: config.animationDurations.pointer,
+        ease: "power2.out",
+      });
+    });
   }
 
   function resetSlideItemsScale(swiper) {
     const slideItems = swiper.querySelectorAll(".swiper-slide");
-    slideItems.forEach(slide => {
-        gsap.to(slide, {
-            scale: 1,
-            duration: config.animationDurations.pointer,
-            ease: "power2.out",
-        })
-    }); 
+    slideItems.forEach((slide) => {
+      gsap.to(slide, {
+        scale: 1,
+        duration: config.animationDurations.pointer,
+        ease: "power2.out",
+      });
+    });
   }
 
   function initializePointerText(pointerText) {

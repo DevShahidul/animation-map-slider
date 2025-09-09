@@ -16,6 +16,19 @@
   --dreamlab-heading2-size-xl: 2.75rem;
 }
 
+h2, .h2 {font-size: calc(1.4rem + 1.8vw);}
+@media (min-width: 1200px) {
+h2, .h2 {font-size: 2.75rem;}
+}
+h4, .h4 {font-size: calc(1.325rem + 0.9vw);}
+@media (min-width: 1200px) {
+h4, .h4 {font-size: 2rem;}
+}
+h5, .h5 {font-size: calc(1.275rem + 0.3vw);}
+@media (min-width: 1200px) {
+h5, .h5 {font-size: 1.5rem;}
+}
+
 /*BUTTONS */
 .btn {
   --bs-btn-padding-x: 2rem;
@@ -212,7 +225,7 @@
       display: inline-block;
       margin-top: 0.5rem;
     }
-    h3 {
+    .slide-title {
       margin-top: 1rem;
       margin-bottom: 1rem;
       text-transform: capitalize;
@@ -221,8 +234,8 @@
       position: relative;
       z-index: 9;
       .icon {
-        color: var(--forground);
-        background-color: var(--background);
+        background-color: var(--forground);
+        color: var(--background);
         border-radius: 1rem;
         transition: all 0.5s ease;
         svg {
@@ -270,12 +283,6 @@
         max-width: 24rem;
       }
     }
-    .slide-content {
-      h3 {
-        margin-top: 1.5rem;
-        margin-bottom: 3rem;
-      }
-    }
     .slide-item {
       height: var(--slide-item-height, 21.25rem);
       width: var(--item-width, 21.25rem);
@@ -291,6 +298,18 @@
         width: calc(var(--item-width, 21.25rem) * 2);
       }
     }
+    .slide-content {
+      .btn {
+        .icon {
+          color: var(--forground);
+          background-color: var(--background);
+        }
+      }
+      .slide-title {
+        margin-top: 1.5rem;
+        margin-bottom: 3rem;
+      }
+    }
   }
 }
 
@@ -304,7 +323,7 @@
     }
 
     .slide-content {
-      h3 {
+      .slide-title {
         margin-top: 2rem;
       }
     }
