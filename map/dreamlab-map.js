@@ -244,13 +244,13 @@
     if (mapSwiperInitialized) return;
     mapSwiperInitialized = true;
 
-    mapSliderSwiperInstance = new Swiper(".swiper", {
+    mapSliderSwiperInstance = new Swiper("#map-swiper", {
       direction: "horizontal",
       loop: true,
       speed: 2000,
       autoplay: {
-        // delay: 1800,
-        delay: 5000800,
+        delay: 1800,
+        // delay: 5000800,
         disableOnInteraction: false,
       },
       watchSlidesProgress: true,
@@ -866,15 +866,27 @@
   // Set current slide number with padding if it's below 10
   function setCurrentSlideNumber(indx, activeSlide) {
     const paddedIndex = indx + 1 < 10 ? `0${indx + 1}` : indx + 1;
-    activeSlide.querySelector(".slider-counter .current").textContent =
-      paddedIndex;
+    console.log(indx, activeSlide);
+
+    const currentCounter = activeSlide.querySelector(".slider-counter .current");
+    if(currentCounter) {
+      currentCounter.textContent = paddedIndex;
+    } else{
+        console.warn("Could not find .slider-counter .current in activeSlide");
+    }
   }
 
   // Set total slide number with padding if it's below 10
   function setTotalSlideNumber(total, slide) {
     const paddedTotal = total < 10 ? `0${total}` : total;
-    slide.querySelector(".slider-counter .total").textContent =
-      paddedTotal;
+
+    const totalCounter = slide.querySelector(".slider-counter .total");
+
+    if(totalCounter){
+      totalCounter.textContent = paddedTotal;
+    } else {
+      console.warn("Could not find .slider-counter .total in activeSlide");
+    }
   }
 
   // Public API
