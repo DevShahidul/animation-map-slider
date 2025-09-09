@@ -249,7 +249,8 @@
       loop: true,
       speed: 2000,
       autoplay: {
-        delay: 1800,
+        // delay: 1800,
+        delay: 5000800,
         disableOnInteraction: false,
       },
       watchSlidesProgress: true,

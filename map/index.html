@@ -32,7 +32,7 @@
     >
       <button
         id="btn-close-slider"
-        class="btn-close-slider bg-transparent fixed-top border-0 text-bg-dark d-flex align-items-center z-index-fixed mt-1 py-3"
+        class="btn-close-slider bg-transparent fixed-top border-0 text-bg-dark d-flex align-items-center mt-1 py-3"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -70,81 +70,6 @@
               dolores maxime.
             </p>
           </div>
-        </div>
-        <div class="contrller">
-          <!-- control elements will go here -->
-          <span class="label text-uppercase text-sm position-relative text-end"
-            >chosen zone</span
-          >
-          <ul
-            class="nav-controls text-end mt-3 list-unstyled position-relative"
-          >
-            <li
-              data-area="area-midwest"
-              class="nav-control-item position-relative active"
-            >
-              <span class="item-label">Midwest</span>
-              <div
-                class="indecators d-flex justify-content-end align-items-end flex-column position-absolute end-0 top-50 translate-middle-y gap-2"
-              >
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </li>
-            <li
-              data-area="area-canada"
-              class="nav-control-item position-relative"
-            >
-              <span class="item-label">Canada</span>
-              <div
-                class="indecators d-flex justify-content-end align-items-end flex-column position-absolute end-0 top-50 translate-middle-y gap-2"
-              >
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </li>
-            <li
-              data-area="area-west"
-              class="nav-control-item position-relative"
-            >
-              <span class="item-label">West</span>
-              <div
-                class="indecators d-flex justify-content-end align-items-end flex-column position-absolute end-0 top-50 translate-middle-y gap-2"
-              >
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </li>
-            <li
-              data-area="area-south"
-              class="nav-control-item position-relative"
-            >
-              <span class="item-label">South</span>
-              <div
-                class="indecators d-flex justify-content-end align-items-end flex-column position-absolute end-0 top-50 translate-middle-y gap-2"
-              >
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </li>
-            <li
-              data-area="area-northeast"
-              class="nav-control-item position-relative"
-            >
-              <span class="item-label">Northeast</span>
-              <div
-                class="indecators d-none d-lg-flex justify-content-end align-items-end flex-column position-absolute end-0 top-50 translate-middle-y gap-2"
-              >
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </li>
-          </ul>
         </div>
         <div class="map">
           <!-- map element will go here -->
@@ -576,6 +501,81 @@
             </svg>
           </div>
         </div>
+        <div class="contrller mt-5 mt-sm-0">
+          <!-- control elements will go here -->
+          <span class="label text-uppercase text-sm position-relative text-lg-end"
+            >chosen zone</span
+          >
+          <ul
+            class="nav-controls text-lg-end mt-3 list-unstyled position-relative"
+          >
+            <li
+              data-area="area-midwest"
+              class="nav-control-item position-relative active"
+            >
+              <span class="item-label">Midwest</span>
+              <div
+                class="indecators d-flex justify-content-lg-end align-items-lg-end flex-column position-absolute top-50 translate-middle-y"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </li>
+            <li
+              data-area="area-canada"
+              class="nav-control-item position-relative"
+            >
+              <span class="item-label">Canada</span>
+              <div
+                class="indecators d-flex justify-content-lg-end align-items-lg-end flex-column position-absolute top-50 translate-middle-y"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </li>
+            <li
+              data-area="area-west"
+              class="nav-control-item position-relative"
+            >
+              <span class="item-label">West</span>
+              <div
+                class="indecators d-flex justify-content-lg-end align-items-lg-end flex-column position-absolute top-50 translate-middle-y"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </li>
+            <li
+              data-area="area-south"
+              class="nav-control-item position-relative"
+            >
+              <span class="item-label">South</span>
+              <div
+                class="indecators d-flex justify-content-lg-end align-items-lg-end flex-column position-absolute top-50 translate-middle-y"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </li>
+            <li
+              data-area="area-northeast"
+              class="nav-control-item position-relative"
+            >
+              <span class="item-label">Northeast</span>
+              <div
+                class="indecators d-flex justify-content-lg-end align-items-lg-end flex-column position-absolute top-50 translate-middle-y"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
       <!-- Slider area -->
       <div
@@ -587,7 +587,7 @@
           <div class="swiper-wrapper h-100" id="map-swiper-wrapper">
             <!-- Slide 1 -->
             <div class="swiper-slide">
-              <div class="slide-inner h-100 d-flex">
+              <div class="slide-inner ps-5 ps-md-0 h-100 d-flex">
                 <!-- Slider counter -->
                 <div
                   class="slide-bg position-absolute h-100"
@@ -603,9 +603,9 @@
                     --slide-forground: #ffecb3;
                   "
                 >
-                  <div class="content-inner h-100 d-flex flex-column">
+                  <div class="content-inner mt-4 mt-md-0 h-100 d-flex flex-column">
                     <div
-                      class="slider-counter d-flex justify-content-center align-items-center gap-2"
+                      class="slider-counter d-flex justify-md-content-center align-items-center gap-2"
                     >
                       <span class="current">1</span>
                       <span class="separator"></span>
@@ -618,9 +618,9 @@
                       />
                     </div>
                     <div
-                      class="flex-grow-1 d-flex align-items-end content position-relative"
+                      class="flex-lg-grow-1 d-flex align-items-end content position-relative"
                     >
-                      <div class="content-wrapper">
+                      <div class="content-wrapper pb-4 pb-md-0">
                         <h6 class="text-uppercase text-sm">Climate Status</h6>
                         <h2>First Slide Title</h2>
                         <p>
@@ -629,7 +629,7 @@
                           dolore magna aliqua.
                         </p>
                         <div
-                          class="animated-circle-text position-absolute end-0"
+                          class="animated-circle-text"
                         >
                           <svg
                             width="100"
@@ -759,7 +759,7 @@
             </div>
             <!-- Slide 2 -->
             <div class="swiper-slide">
-              <div class="slide-inner h-100 d-flex">
+              <div class="slide-inner ps-5 ps-md-0 h-100 d-flex">
                 <!-- Slider counter -->
                 <div
                   class="slide-bg position-absolute h-100"
@@ -774,9 +774,9 @@
                     --slide-forground: #bdfaed;
                   "
                 >
-                  <div class="content-inner h-100 d-flex flex-column">
+                  <div class="content-inner mt-4 mt-md-0 h-100 d-flex flex-column">
                     <div
-                      class="slider-counter d-flex justify-content-center align-items-center gap-2"
+                      class="slider-counter d-flex justify-md-content-center align-items-center gap-2"
                     >
                       <span class="current">1</span>
                       <span class="separator"></span>
@@ -789,9 +789,9 @@
                       />
                     </div>
                     <div
-                      class="flex-grow-1 d-flex align-items-end content position-relative"
+                      class="flex-lg-grow-1 d-flex align-items-end content position-relative"
                     >
-                      <div class="content-wrapper">
+                      <div class="content-wrapper pb-4 pb-md-0">
                         <h6 class="text-uppercase text-sm">Climate Status</h6>
                         <h2>Second Slide Title</h2>
                         <p>
@@ -800,7 +800,7 @@
                           dolore magna aliqua.
                         </p>
                         <div
-                          class="animated-circle-text position-absolute end-0"
+                          class="animated-circle-text"
                         >
                           <svg
                             width="100"
@@ -930,7 +930,7 @@
             </div>
             <!-- Slide 3 -->
             <div class="swiper-slide">
-              <div class="slide-inner h-100 d-flex">
+              <div class="slide-inner ps-5 ps-md-0 h-100 d-flex">
                 <!-- Slider counter -->
                 <div
                   class="slide-bg position-absolute h-100"
@@ -946,9 +946,9 @@
                     --slide-forground: #9eeba6;
                   "
                 >
-                  <div class="content-inner h-100 d-flex flex-column">
+                  <div class="content-inner mt-4 mt-md-0 h-100 d-flex flex-column">
                     <div
-                      class="slider-counter d-flex justify-content-center align-items-center gap-2"
+                      class="slider-counter d-flex justify-md-content-center align-items-center gap-2"
                     >
                       <span class="current">1</span>
                       <span class="separator"></span>
@@ -961,9 +961,9 @@
                       />
                     </div>
                     <div
-                      class="flex-grow-1 d-flex align-items-end content position-relative"
+                      class="flex-lg-grow-1 d-flex align-items-end content position-relative"
                     >
-                      <div class="content-wrapper">
+                      <div class="content-wrapper pb-4 pb-md-0">
                         <h6 class="text-uppercase text-sm">Climate Status</h6>
                         <h2>Third Slide Title</h2>
                         <p>
@@ -972,7 +972,7 @@
                           dolore magna aliqua.
                         </p>
                         <div
-                          class="animated-circle-text position-absolute end-0"
+                          class="animated-circle-text"
                         >
                           <svg
                             width="100"
@@ -1104,7 +1104,7 @@
 
             <!-- Slide 4 -->
             <div class="swiper-slide">
-              <div class="slide-inner h-100 d-flex">
+              <div class="slide-inner ps-5 ps-md-0 h-100 d-flex">
                 <!-- Slider counter -->
                 <div
                   class="slide-bg position-absolute h-100"
@@ -1119,9 +1119,9 @@
                     --slide-forground: #ffecb3;
                   "
                 >
-                  <div class="content-inner h-100 d-flex flex-column">
+                  <div class="content-inner mt-4 mt-md-0 h-100 d-flex flex-column">
                     <div
-                      class="slider-counter d-flex justify-content-center align-items-center gap-2"
+                      class="slider-counter d-flex justify-md-content-center align-items-center gap-2"
                     >
                       <span class="current">1</span>
                       <span class="separator"></span>
@@ -1134,9 +1134,9 @@
                       />
                     </div>
                     <div
-                      class="flex-grow-1 d-flex align-items-end content position-relative"
+                      class="flex-lg-grow-1 d-flex align-items-end content position-relative"
                     >
-                      <div class="content-wrapper">
+                      <div class="content-wrapper pb-4 pb-md-0">
                         <h6 class="text-uppercase text-sm">Climate Status</h6>
                         <h2>Fourth Slide Title</h2>
                         <p>
@@ -1145,7 +1145,7 @@
                           dolore magna aliqua.
                         </p>
                         <div
-                          class="animated-circle-text position-absolute end-0"
+                          class="animated-circle-text"
                         >
                           <svg
                             width="100"
@@ -1275,7 +1275,7 @@
             </div>
             <!-- Slide 5 -->
             <div class="swiper-slide">
-              <div class="slide-inner h-100 d-flex">
+              <div class="slide-inner ps-5 ps-md-0 h-100 d-flex">
                 <!-- Slider counter -->
                 <div
                   class="slide-bg position-absolute h-100"
@@ -1291,9 +1291,9 @@
                     --slide-forground: #bdfaed;
                   "
                 >
-                  <div class="content-inner h-100 d-flex flex-column">
+                  <div class="content-inner mt-4 mt-md-0 h-100 d-flex flex-column">
                     <div
-                      class="slider-counter d-flex justify-content-center align-items-center gap-2"
+                      class="slider-counter d-flex justify-md-content-center align-items-center gap-2"
                     >
                       <span class="current">1</span>
                       <span class="separator"></span>
@@ -1306,9 +1306,9 @@
                       />
                     </div>
                     <div
-                      class="flex-grow-1 d-flex align-items-end content position-relative"
+                      class="flex-lg-grow-1 d-flex align-items-end content position-relative"
                     >
-                      <div class="content-wrapper">
+                      <div class="content-wrapper pb-4 pb-md-0">
                         <h6 class="text-uppercase text-sm">Climate Status</h6>
                         <h2>Fifth Slide Title</h2>
                         <p>
@@ -1317,7 +1317,7 @@
                           dolore magna aliqua.
                         </p>
                         <div
-                          class="animated-circle-text position-absolute end-0"
+                          class="animated-circle-text"
                         >
                           <svg
                             width="100"

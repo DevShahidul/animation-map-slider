@@ -7,7 +7,7 @@
   --dreamlab-blue: #376bdd;
   --dreamlab-cream: #ffecb3;
   --dreamlab-orange: #de6436;
-  
+
   --dreamlab-heading2-size-sm: 1.75rem;
   --dreamlab-heading2-size-md: 2rem;
   --dreamlab-heading2-size-lg: 2.5rem;
@@ -36,7 +36,7 @@
     background: var(--dreamlab-orange);
   }
 
-  .z-index-fixed{
+  .z-index-fixed {
     z-index: 10000;
   }
 
@@ -47,7 +47,7 @@
     }
   }
   .slider-area {
-    width: calc(100% - 6.5rem);
+    width: calc(100% - 2.5rem);
     transform: translateX(100%);
     overflow-x: hidden;
   }
@@ -66,7 +66,6 @@
     padding: var(--padding-y) var(--padding-x);
     position: relative;
     z-index: 3;
-    margin-left: auto;
     margin-right: 3.125rem;
     transform: translateX(2);
     background-color: var(--slide-background);
@@ -89,17 +88,11 @@
       pointer-events: none;
       opacity: 0.25;
     }
-    p {
-      max-width: 260px;
-      &:last-of-type {
-        margin-bottom: 3rem;
-      }
-    }
     img {
       max-width: 100%;
     }
     .animated-circle-text {
-      bottom: 0rem;
+      text-align: right;
       line {
         stroke: var(--slide-background) !important;
       }
@@ -172,7 +165,7 @@
     color: var(--dreamlab-light-text);
     .label {
       display: block;
-      padding-right: var(--column-space);
+      padding-left: var(--column-space);
       &::after {
         content: "";
         display: block;
@@ -180,25 +173,24 @@
         height: 1px;
         background: currentColor;
         margin-top: 0.5rem;
-        margin-left: auto;
-        margin-right: -0.75rem;
+        margin-left: -0.75rem;
       }
     }
     .nav-controls {
-      font-size: 1.5rem;
+      font-size: 1rem;
       line-height: 1.75;
       &::after {
         content: "";
         width: 1px;
         height: 100%;
         position: absolute;
-        right: 0;
+        left: 0;
         bottom: 0;
         background-color: rgba(255, 255, 255, 0.35);
       }
     }
     .nav-control-item {
-      padding-right: var(--column-space);
+      padding-left: var(--column-space);
       position: relative;
       cursor: pointer;
       transition: cubic-bezier(0.27, 0.6, 0.62, 0.99) padding 0.7s,
@@ -226,15 +218,16 @@
           height: 1px;
           background: currentColor;
           position: absolute;
-          right: 0;
-          margin-top: 0cqmin;
-          margin-left: auto;
+          left: 0;
+          margin-top: 0;
         }
       }
     }
     .indecators {
+      left: 0;
+      gap: 0.3rem;
       span {
-        width: var(--indecator-size);
+        width: var(--indecator-size, 0.5rem);
         height: 1px;
         background: currentColor;
         transition: cubic-bezier(0.27, 0.6, 0.62, 0.99) width 0.7s;
@@ -248,6 +241,10 @@
   }
   .map {
     max-width: 100%;
+    .map-svg {
+        margin-left: -5rem;
+        margin-right: -2rem;
+    }
     svg {
       width: 100%;
       height: auto;
@@ -283,6 +280,8 @@
   .btn-close-slider {
     width: 5rem;
     transform: translateY(-10rem);
+    left: 4.75rem;
+    z-index: 999999;
   }
 
   .indicator line {
@@ -299,6 +298,42 @@
     fill: #fbe9ba;
     font-weight: normal;
     text-transform: uppercase;
+  }
+}
+
+@media screen and (min-width: 35.5rem) {
+  .dreamlab-map-section {
+    .contrller {
+      position: absolute;
+      left: 1.5rem;
+      bottom: 2rem;
+    }
+  }
+}
+@media screen and (min-width: 48rem) {
+  .dreamlab-map-section {
+    .btn-close-slider {
+      left: 0;
+    }
+    .slide-content {
+      margin-left: auto;
+      .animated-circle-text {
+        position: absolute;
+        right: 0;
+        bottom: 0rem;
+        text-align: unset;
+      }
+
+      p {
+        max-width: 260px;
+        &:last-of-type {
+          margin-bottom: 3rem;
+        }
+      }
+    }
+    .slider-area {
+      width: calc(100% - 6.5rem);
+    }      
   }
 }
 
@@ -335,9 +370,39 @@
       }
     }
     .contrller {
-      position: absolute;
+      left: auto;
       right: 5rem;
-      bottom: 6.25rem;
+      bottom: 6.25rem;.label {
+        padding-left: 0;
+        padding-right: var(--column-space);
+        &::after {
+          margin-left: auto;
+          margin-right: -0.75rem;
+        }
+      }
+      .nav-controls {
+        font-size: 1.5rem;
+        &::after {
+          left: auto;
+          right: 0;
+        }
+      }
+      .nav-control-item {
+        padding-left: 0;
+        padding-right: var(--column-space);
+        &:not(:last-child) {
+          &::after {
+            left: auto;
+            right: 0;
+            margin-left: auto;
+          }
+        }
+      }
+      .indecators {
+        left: auto;
+        right: 0;
+        gap: 0.5rem;
+      }
     }
     .slide-content {
       --padding-x: 2rem;
