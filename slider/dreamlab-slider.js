@@ -20,7 +20,7 @@
       pointer: 0.2,
       textTransition: 0.3,
       textStagger: 0.05,
-      slide: 0.4,
+      slide: 0.2,
     },
     selectors: {
       sliderSection: ".dreamlab-draggable-slider-section",
@@ -184,7 +184,7 @@
       gsap.to(slide, {
         width: `${baseWidth / 16}rem`,
         duration: config.animationDurations.slide,
-        ease: "power2.out"
+        ease: "power4.out"
       });
     });
   }
@@ -195,7 +195,7 @@
     gsap.to(slide, {
       width: `${expandedWidth}rem`,
       duration: config.animationDurations.slide,
-      ease: "power2.out",
+      ease: "power4.out",
     });
   }
 
