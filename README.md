@@ -3,6 +3,13 @@
 
 This project provides an interactive, animated map and draggable slider for displaying stories across North America. It is built with HTML, CSS, and JavaScript, leveraging GSAP for animations and Bootstrap for responsive layout.
 
+## Live Demo
+🔗 **Preview URL:** [interactivemap-draggableslider.netlify.app](https://interactivemap-draggableslider.netlify.app)
+
+```
+https://interactivemap-draggableslider.netlify.app
+```
+
 ## Features
 
 ### Map Section & Draggable Slider
