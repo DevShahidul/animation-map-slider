@@ -1,536 +1,485 @@
 (function () {
   "use strict";
+  
+  // Main application class
+  class DraggableSliderApp {
+    constructor() {
+      // State management
+      this.state = {
+        draggableSliderInitialized: false,
+        draggableSliderInstance: null,
+        baseSlideWidth: null,
+        pointerInitialized: false,
+        isDragging: false,
+        isHovering: false,
+      };
 
-  // State management
-  const state = {
-    draggableSliderInitialized: false,
-    draggableSliderInstance: null,
-    baseSlideWidth: null,
-    pointerInitialized: false,
-    isDragging: false,
-    isHovering: false,
-  };
+      // Configuration
+      this.config = {
+        spaceBetween: 32,
+        slideExpandMultiplier: 2,
+        animationDurations: {
+          hover: 0.3,
+          pointer: 0.2,
+          textTransition: 0.3,
+          textStagger: 0.05,
+          slide: 0.2,
+        },
+        selectors: {
+          sliderSection: ".dreamlab-draggable-slider-section",
+          swiper: ".draggable-swiper-slider",
+          pointer: "#pointer",
+          pointerText: ".pointer-text",
+          staticDr: ".static-dr",
+          animatedAG: ".animated-ag",
+          animatedOP: ".animated-op",
+        },
+      };
 
-  // Configuration
-  const config = {
-    spaceBetween: 32,
-    slideExpandMultiplier: 2,
-    animationDurations: {
-      hover: 0.3,
-      pointer: 0.2,
-      textTransition: 0.3,
-      textStagger: 0.05,
-      slide: 0.2,
-    },
-    selectors: {
-      sliderSection: ".dreamlab-draggable-slider-section",
-      swiper: ".draggable-swiper-slider",
-      pointer: "#pointer",
-      pointerText: ".pointer-text",
-      staticDr: ".static-dr",
-      animatedAG: ".animated-ag",
-      animatedOP: ".animated-op",
-    },
-  };
-
-  // Initialize on DOM load
-  document.addEventListener("DOMContentLoaded", initializeApp);
-
-  function initializeApp() {
-    const draggableSliderSection = document.querySelector(
-      config.selectors.sliderSection
-    );
-    if (!draggableSliderSection) return;
-
-    initializeDraggableSlider();
-  }
-
-  function initializeDraggableSlider() {
-    if (state.draggableSliderInitialized) return;
-
-    // Clone last item to make sure to slide all items smoothly
-    cloneLastSlideWithcheckWindowSize();
-
-    state.draggableSliderInitialized = true;
-    state.draggableSliderInstance = createSwiperInstance();
-  }
-
-  function cloneLastSlide() {
-    const swiperWrapper = document.querySelector(
-      `${config.selectors.swiper} .swiper-wrapper`
-    );
-    const slides = swiperWrapper?.querySelectorAll(".swiper-slide");
-
-    // Exit if swiperWrapper doesn't exist
-    if (!swiperWrapper || !slides.length) return;
-
-    // Check if an extra-item already exists
-    const hasExtraItem = swiperWrapper.querySelector(
-      ".swiper-slide.extra-item"
-    );
-    if (hasExtraItem) return; // Exit early if it exists
-
-    // Clone the last slide
-    const lastSlide = slides[slides.length - 1];
-    const clonedSlide = lastSlide.cloneNode(true);
-
-    // Add the extra-item class
-    clonedSlide.classList.add("extra-item");
-
-    // Append it to the wrapper
-    swiperWrapper.appendChild(clonedSlide);
-  }
-
-  function removeClonedSlides() {
-    const swiperWrapper = document.querySelector(
-      `${config.selectors.swiper} .swiper-wrapper`
-    );
-    if (!swiperWrapper) return;
-
-    const extraItems = swiperWrapper.querySelectorAll(
-      ".swiper-slide.extra-item"
-    );
-    extraItems.forEach((item) => item.remove());
-  }
-
-  function cloneLastSlideWithcheckWindowSize() {
-    if (window.innerWidth >= 1024) {
-      cloneLastSlide();
-    } else {
-      removeClonedSlides();
+      // Initialize on DOM load
+      document.addEventListener("DOMContentLoaded", () => this.initializeApp());
     }
-  }
 
-  window.addEventListener(
-    "resize",
-    debounce(cloneLastSlideWithcheckWindowSize, 200)
-  );
+    initializeApp() {
+      const draggableSliderSection = document.querySelector(
+        this.config.selectors.sliderSection
+      );
+      if (!draggableSliderSection) return;
+      
+      this.initializeDraggableSlider();
+    }
 
-  function debounce(func, delay) {
-    let timeoutId;
-    return function () {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(this, arguments);
-      }, delay);
-    };
-  }
+    initializeDraggableSlider() {
+      if (this.state.draggableSliderInitialized) return;
+      
+      this.cloneLastSlideWithCheckWindowSize();
+      this.state.draggableSliderInitialized = true;
+      this.state.draggableSliderInstance = this.createSwiperInstance();
+    }
 
-  function createSwiperInstance() {
-    return new Swiper(config.selectors.swiper, {
-      spaceBetween: config.spaceBetween,
-      slidesPerView: 1,
-      allowTouchMove: true,
-      grabCursor: false,
-      breakpoints: {
-        640: { slidesPerView: 2 },
-        1024: { slidesPerView: 3 },
-        1280: { slidesPerView: 4 },
-      },
-      on: {
-        init: handleSwiperInit,
-        touchStart: () => handleDragStart(),
-        touchEnd: () => handleDragEnd(),
-        sliderFirstMove: () => handleDragMove(),
-        sliderMove: (_, e) => handleDragSlider(e),
-      },
-    });
-  }
+    cloneLastSlide() {
+      const swiperWrapper = document.querySelector(
+        `${this.config.selectors.swiper} .swiper-wrapper`
+      );
+      const slides = swiperWrapper?.querySelectorAll(".swiper-slide");
+      
+      if (!swiperWrapper || !slides.length) return;
+      
+      // Check if an extra-item already exists
+      if (swiperWrapper.querySelector(".swiper-slide.extra-item")) return;
+      
+      const lastSlide = slides[slides.length - 1];
+      const clonedSlide = lastSlide.cloneNode(true);
+      clonedSlide.classList.add("extra-item");
+      swiperWrapper.appendChild(clonedSlide);
+    }
 
-  function handleSwiperInit() {
-    const slides = this.slides;
-    const activeSlide = slides[this.activeIndex];
+    removeClonedSlides() {
+      const swiperWrapper = document.querySelector(
+        `${this.config.selectors.swiper} .swiper-wrapper`
+      );
+      if (!swiperWrapper) return;
+      
+      const extraItems = swiperWrapper.querySelectorAll(".swiper-slide.extra-item");
+      extraItems.forEach((item) => item.remove());
+    }
 
-    if (!activeSlide) return;
-
-    state.baseSlideWidth = getSwiperSlideWidth();
-
-    // Use requestAnimationFrame for better performance
-    requestAnimationFrame(() => {
-      expandFirstSlide(activeSlide);
-      initializeSlideHoverEffects(slides);
-
-      if (!state.pointerInitialized) {
-        initializePointerSystem();
-        state.pointerInitialized = true;
+    cloneLastSlideWithCheckWindowSize() {
+      if (window.innerWidth >= 1024) {
+        this.cloneLastSlide();
+      } else {
+        this.removeClonedSlides();
       }
-    });
-  }
+    }
 
-  function initializeSlideHoverEffects(slides) {
-    if (!slides?.length) return;
-    const slideWidth = getSwiperSlideWidth();
-    if (!slideWidth) return;
+    debounce(func, delay) {
+      let timeoutId;
+      return function () {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          func.apply(this, arguments);
+        }, delay);
+      };
+    }
 
-    slides.forEach((slide) => {
-      setSlideWidthProperty(slide, slideWidth);
-      attachSlideHoverListeners(slide, slides, slideWidth);
-    });
-  }
+    createSwiperInstance() {
+      // Setup debounced resize handler
+      window.addEventListener(
+        "resize",
+        this.debounce(() => this.cloneLastSlideWithCheckWindowSize(), 200)
+      );
 
-  function attachSlideHoverListeners(slide, allSlides, slideWidth) {
-    slide.addEventListener("mouseenter", () => {
-      if (slide.classList.contains("expanded")) return;
+      return new Swiper(this.config.selectors.swiper, {
+        spaceBetween: this.config.spaceBetween,
+        slidesPerView: 1,
+        allowTouchMove: true,
+        grabCursor: false,
+        breakpoints: {
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+          1280: { slidesPerView: 4 },
+        },
+        on: {
+          init: this.handleSwiperInit.bind(this),
+          touchStart: () => this.handleDragStart(),
+          touchEnd: () => this.handleDragEnd(),
+          sliderFirstMove: () => this.handleDragMove(),
+          sliderMove: (_, e) => this.handleDragSlider(e),
+        },
+      });
+    }
 
-      resetAllSlides(allSlides, slideWidth);
-      expandSlide(slide, slideWidth);
-    });
-  }
+    handleSwiperInit() {
+      const slides = this.slides;
+      const activeSlide = slides[this.activeIndex];
+      if (!activeSlide) return;
+      
+      this.state.baseSlideWidth = this.getSwiperSlideWidth();
+      
+      requestAnimationFrame(() => {
+        this.expandFirstSlide(activeSlide);
+        this.initializeSlideHoverEffects(slides);
+        if (!this.state.pointerInitialized) {
+          this.initializePointerSystem();
+          this.state.pointerInitialized = true;
+        }
+      });
+    }
 
-  function resetAllSlides(slides, baseWidth) {
-    slides.forEach((slide) => {
-      slide.classList.remove("expanded");
-      // slide.style.width = `${baseWidth / 16}rem`;
+    initializeSlideHoverEffects(slides) {
+      if (!slides?.length) return;
+      
+      const slideWidth = this.getSwiperSlideWidth();
+      if (!slideWidth) return;
+      
+      slides.forEach((slide) => {
+        this.setSlideWidthProperty(slide, slideWidth);
+        this.attachSlideHoverListeners(slide, slides, slideWidth);
+      });
+    }
+
+    attachSlideHoverListeners(slide, allSlides, slideWidth) {
+      slide.addEventListener("mouseenter", () => {
+        if (slide.classList.contains("expanded")) return;
+        this.resetAllSlides(allSlides, slideWidth);
+        this.expandSlide(slide, slideWidth);
+      });
+    }
+
+    resetAllSlides(slides, baseWidth) {
+      slides.forEach((slide) => {
+        slide.classList.remove("expanded");
+        this.animateSlideWidth(slide, `${baseWidth / 16}rem`);
+      });
+    }
+
+    expandSlide(slide, baseWidth) {
+      const expandedWidth = (baseWidth * this.config.slideExpandMultiplier) / 16;
+      slide.classList.add("expanded");
+      this.animateSlideWidth(slide, `${expandedWidth}rem`);
+    }
+
+    animateSlideWidth(slide, width) {
       gsap.to(slide, {
-        width: `${baseWidth / 16}rem`,
-        duration: config.animationDurations.slide,
+        width: width,
+        duration: this.config.animationDurations.slide,
         ease: "power4.out"
       });
-    });
-  }
-
-  function expandSlide(slide, baseWidth) {
-    const expandedWidth = (baseWidth * config.slideExpandMultiplier) / 16;
-    slide.classList.add("expanded");
-    gsap.to(slide, {
-      width: `${expandedWidth}rem`,
-      duration: config.animationDurations.slide,
-      ease: "power4.out",
-    });
-  }
-
-  function getSwiperSlideWidth() {    
-    if (!state.draggableSliderInstance) return null;
-
-    // Get the base slide width from Swiper's parameters
-    const swiperWidth = state.draggableSliderInstance.width;
-    const slidesPerView = state.draggableSliderInstance.params.slidesPerView;
-    const spaceBetween = state.draggableSliderInstance.params.spaceBetween;
-
-    // Calculate single slide width considering the space between slides
-    const totalSpaceBetween = spaceBetween * (Math.floor(slidesPerView) - 1);
-    const slideWidth = (swiperWidth - totalSpaceBetween) / slidesPerView;
-
-    return slideWidth;
-  }
-
-  function expandFirstSlide(activeSlide) {
-    if (!activeSlide) return;
-    const slideWidth = getSwiperSlideWidth();
-    expandSlide(activeSlide, slideWidth);
-  }
-
-  function setSlideWidthProperty(element, width) {
-    element.style.setProperty("--item-width", `${width / 16}rem`);
-  }
-
-  function initializePointerSystem() {
-    const elements = getPointerElements();
-    if (!elements.isValid) return;
-
-    initializePointerText(elements.pointerText);
-    attachPointerEventListeners(elements);
-    setupGlobalDragHandlers();
-  }
-
-  function getPointerElements() {
-    const pointer = document.querySelector(config.selectors.pointer);
-    const slider = document.querySelector(config.selectors.swiper);
-    const pointerText = pointer?.querySelector(config.selectors.pointerText);
-
-    const isValid = pointer && slider && pointerText;
-
-    if (!isValid) {
-      console.warn("Required pointer elements not found");
     }
 
-    return { pointer, slider, pointerText, isValid };
-  }
+    getSwiperSlideWidth() {    
+      if (!this.state.draggableSliderInstance) return null;
+      
+      const swiperWidth = this.state.draggableSliderInstance.width;
+      const slidesPerView = this.state.draggableSliderInstance.params.slidesPerView;
+      const spaceBetween = this.state.draggableSliderInstance.params.spaceBetween;
+      
+      const totalSpaceBetween = spaceBetween * (Math.floor(slidesPerView) - 1);
+      const slideWidth = (swiperWidth - totalSpaceBetween) / slidesPerView;
+      
+      return slideWidth;
+    }
 
-  function attachPointerEventListeners(elements) {
-    const { pointer, slider, pointerText } = elements;
+    expandFirstSlide(activeSlide) {
+      if (!activeSlide) return;
+      const slideWidth = this.getSwiperSlideWidth();
+      this.expandSlide(activeSlide, slideWidth);
+    }
 
-    // Mouse enter/leave handlers
-    slider.addEventListener("mouseenter", () => handlePointerEnter(pointer));
-    slider.addEventListener("mouseleave", () =>
-      handlePointerLeave(pointer, pointerText)
-    );
+    setSlideWidthProperty(element, width) {
+      element.style.setProperty("--item-width", `${width / 16}rem`);
+    }
 
-    // Mouse move handler - works during both hover and drag
-    slider.addEventListener("mousemove", (e) =>
-      handlePointerMove(e, slider, pointer)
-    );
+    initializePointerSystem() {
+      const elements = this.getPointerElements();
+      if (!elements.isValid) return;
+      
+      this.initializePointerText(elements.pointerText);
+      this.attachPointerEventListeners(elements);
+    }
 
-    // Mouse drag handlers for non-touch devices
-    slider.addEventListener("mousedown", (e) =>
-      handleMouseDown(e, pointerText)
-    );
-    document.addEventListener("mouseup", () => handleMouseUp(pointerText));
-
-    // Global mousemove for tracking during drag
-    document.addEventListener("mousemove", (e) => {
-      if (state.isDragging && state.isHovering) {
-        handlePointerMove(e, slider, pointer);
+    getPointerElements() {
+      const pointer = document.querySelector(this.config.selectors.pointer);
+      const slider = document.querySelector(this.config.selectors.swiper);
+      const pointerText = pointer?.querySelector(this.config.selectors.pointerText);
+      const isValid = pointer && slider && pointerText;
+      
+      if (!isValid) {
+        console.warn("Required pointer elements not found");
       }
-    });
+      
+      return { pointer, slider, pointerText, isValid };
+    }
 
-    // Prevent context menu on right click during drag
-    slider.addEventListener("contextmenu", (e) => {
-      if (state.isDragging) e.preventDefault();
-    });
-  }
+    attachPointerEventListeners(elements) {
+      const { pointer, slider, pointerText } = elements;
+      
+      // Mouse enter/leave handlers
+      slider.addEventListener("mouseenter", () => this.handlePointerEnter(pointer));
+      slider.addEventListener("mouseleave", () =>
+        this.handlePointerLeave(pointer, pointerText)
+      );
+      
+      // Mouse move handler
+      slider.addEventListener("mousemove", (e) =>
+        this.handlePointerMove(e, slider, pointer)
+      );
+      
+      // Mouse drag handlers
+      slider.addEventListener("mousedown", (e) =>
+        this.handleMouseDown(e, pointerText)
+      );
+      document.addEventListener("mouseup", () => this.handleMouseUp(pointerText));
+      
+      // Global mousemove for tracking during drag
+      document.addEventListener("mousemove", (e) => {
+        if (this.state.isDragging && this.state.isHovering) {
+          this.handlePointerMove(e, elements.slider, elements.pointer);
+        }
+      });
+      
+      // Prevent context menu on right click during drag
+      slider.addEventListener("contextmenu", (e) => {
+        if (this.state.isDragging) e.preventDefault();
+      });
+    }
 
-  function handlePointerEnter(pointer) {
-    state.isHovering = true;
-    gsap.to(pointer, {
-      scale: 1,
-      duration: config.animationDurations.hover,
-      ease: "back.out(1.7)",
-    });
-  }
+    handlePointerEnter(pointer) {
+      this.state.isHovering = true;
+      this.animatePointerScale(pointer, 1);
+    }
 
-  function handlePointerLeave(pointer, pointerText) {
-    state.isHovering = false;
-    state.isDragging = false;
+    handlePointerLeave(pointer, pointerText) {
+      this.state.isHovering = false;
+      this.state.isDragging = false;
+      this.animatePointerScale(pointer, 0);
+      
+      // Reset text after animation
+      setTimeout(() => this.setPointerTextToDrag(pointerText), 100);
+    }
 
-    gsap.to(pointer, {
-      scale: 0,
-      duration: config.animationDurations.hover,
-      ease: "back.in(1.7)",
-    });
+    handlePointerMove(event, slider, pointer) {
+      if (!this.state.isHovering) return;
+      
+      const rect = slider.getBoundingClientRect();
+      const x = event.clientX - rect.left - pointer.offsetWidth / 2;
+      const y = event.clientY - rect.top - pointer.offsetHeight / 2;
+      
+      gsap.to(pointer, {
+        x: x,
+        y: y,
+        duration: this.config.animationDurations.pointer,
+        ease: "power2.out",
+      });
+    }
 
-    // Reset text after animation
-    setTimeout(() => setPointerTextToDrag(pointerText), 100);
-  }
+    handleMouseDown(event, pointerText) {
+      if (!this.state.isHovering || event.button !== 0) return;
+      
+      this.state.isDragging = true;
+      this.animateToDropText(pointerText);
+    }
 
-  function handlePointerMove(event, slider, pointer) {
-    if (!state.isHovering) return;
+    handleMouseUp(pointerText) {
+      if (!this.state.isDragging || !this.state.isHovering) return;
+      
+      this.state.isDragging = false;
+      setTimeout(() => this.setPointerTextToDrag(pointerText), 100);
+    }
 
-    const rect = slider.getBoundingClientRect();
-    const x = event.clientX - rect.left - pointer.offsetWidth / 2;
-    const y = event.clientY - rect.top - pointer.offsetHeight / 2;
+    animatePointerScale(pointer, scale) {
+      gsap.to(pointer, {
+        scale: scale,
+        duration: this.config.animationDurations.hover,
+        ease: scale === 1 ? "back.out(1.7)" : "back.in(1.7)",
+      });
+    }
 
-    gsap.to(pointer, {
-      x: x,
-      y: y,
-      duration: config.animationDurations.pointer,
-      ease: "power2.out",
-    });
-  }
-
-  function handleMouseDown(event, pointerText) {
-    if (!state.isHovering) return;
-
-    // Only handle left mouse button
-    if (event.button !== 0) return;
-    state.isDragging = true;
-    animateToDropText(pointerText);
-  }
-
-  function handleMouseUp(pointerText) {
-    if (!state.isDragging || !state.isHovering) return;
-
-    state.isDragging = false;
-    setTimeout(() => setPointerTextToDrag(pointerText), 100);
-  }
-
-  function setupGlobalDragHandlers() {
-    // Global handlers for Swiper touch events
-    window.handleDragStart = function () {
-      if (!state.isHovering) return;
-
-      state.isDragging = true;
-      // Get elements for pointer movement
-      const elements = getPointerElements();
+    handleDragStart() {
+      if (!this.state.isHovering) return;
+      
+      this.state.isDragging = true;
+      const elements = this.getPointerElements();
       if (elements.isValid) {
-        animateToDropText(elements.pointerText);
-
-        slideItemsScaleDown(elements.slider);
-
-        // Scale down the pointer
-        gsap.to(elements.pointer, {
-          scale: 0.8,
-          duration: config.animationDurations.pointer,
-          ease: "power2.out",
-        });
+        this.animateToDropText(elements.pointerText);
+        this.slideItemsScaleDown(elements.slider);
+        this.animatePointerScale(elements.pointer, 0.8);
       }
-    };
+    }
 
-    window.handleDragMove = function (event) {
-      if (!state.isHovering) return;
-
-      if (!state.isDragging) {
-        state.isDragging = true;
-        const elements = getPointerElements();
+    handleDragMove(event) {
+      if (!this.state.isHovering) return;
+      
+      if (!this.state.isDragging) {
+        this.state.isDragging = true;
+        const elements = this.getPointerElements();
         if (elements.isValid) {
-          animateToDropText(elements.pointerText);
+          this.animateToDropText(elements.pointerText);
         }
       }
-    };
+    }
 
-    window.handleDragEnd = function () {
-      if (!state.isHovering) return;
-
-      state.isDragging = false;
-      // Get elements to scale up the pointer
-      const elements = getPointerElements();
+    handleDragEnd() {
+      if (!this.state.isHovering) return;
+      
+      this.state.isDragging = false;
+      const elements = this.getPointerElements();
       if (elements.isValid) {
-        setTimeout(() => setPointerTextToDrag(elements.pointerText), 100);
+        setTimeout(() => this.setPointerTextToDrag(elements.pointerText), 100);
+        this.resetSlideItemsScale(elements.slider);
+        this.animatePointerScale(elements.pointer, 1);
+      }
+    }
 
-        resetSlideItemsScale(elements.slider);
+    handleDragSlider(event) {
+      this.state.isDragging = true;
+      const elements = this.getPointerElements();
+      if (elements.isValid) {
+        this.handlePointerMove(event, elements.slider, elements.pointer);
+      }
+    }
 
-        gsap.to(elements.pointer, {
-          scale: 1,
-          duration: config.animationDurations.pointer,
+    slideItemsScaleDown(swiper) {
+      this.animateSlideItemsScale(swiper, 0.95);
+    }
+
+    resetSlideItemsScale(swiper) {
+      this.animateSlideItemsScale(swiper, 1);
+    }
+
+    animateSlideItemsScale(swiper, scale) {
+      const slideItems = swiper.querySelectorAll(".swiper-slide");
+      slideItems.forEach((slide) => {
+        gsap.to(slide, {
+          scale: scale,
+          duration: this.config.animationDurations.pointer,
           ease: "power2.out",
         });
-      }
-    };
-
-    window.handleDragSlider = function (event) {
-      state.isDragging = true;
-      const elements = getPointerElements();
-      if (elements.isValid) {
-        // Immediately update pointer position on mousedown
-        handlePointerMove(event, elements.slider, elements.pointer);
-      }
-    };
-  }
-
-  function slideItemsScaleDown(swiper) {
-    const slideItems = swiper.querySelectorAll(".swiper-slide");
-    slideItems.forEach((slide) => {
-      gsap.to(slide, {
-        scale: 0.95,
-        duration: config.animationDurations.pointer,
-        ease: "power2.out",
       });
-    });
-  }
+    }
 
-  function resetSlideItemsScale(swiper) {
-    const slideItems = swiper.querySelectorAll(".swiper-slide");
-    slideItems.forEach((slide) => {
-      gsap.to(slide, {
-        scale: 1,
-        duration: config.animationDurations.pointer,
-        ease: "power2.out",
-      });
-    });
-  }
+    initializePointerText(pointerText) {
+      this.cleanupExistingTextElements(pointerText);
+      const animatedAG = this.createTextElement(
+        "animated-ag",
+        "<span>a</span><span>g</span>"
+      );
+      pointerText.appendChild(animatedAG);
+      gsap.set(animatedAG.children, { y: 0, opacity: 1 });
+    }
 
-  function initializePointerText(pointerText) {
-    cleanupExistingTextElements(pointerText);
+    cleanupExistingTextElements(pointerText) {
+      const existingElements = [
+        pointerText.querySelector(this.config.selectors.animatedAG),
+        pointerText.querySelector(this.config.selectors.animatedOP),
+      ];
+      existingElements.forEach((el) => el?.remove());
+    }
 
-    const animatedAG = createTextElement(
-      "animated-ag",
-      "<span>a</span><span>g</span>"
-    );
-    pointerText.appendChild(animatedAG);
+    createTextElement(className, innerHTML) {
+      const element = document.createElement("span");
+      element.classList.add(className, "d-inline-flex");
+      element.innerHTML = innerHTML;
+      return element;
+    }
 
-    gsap.set(animatedAG.children, { y: 0, opacity: 1 });
-  }
+    animateToDropText(pointerText) {
+      const existingOP = pointerText.querySelector(this.config.selectors.animatedOP);
+      existingOP?.remove();
+      
+      const ag = pointerText.querySelector(this.config.selectors.animatedAG);
+      
+      // Animate out "ag" letters
+      if (ag?.children.length > 0) {
+        this.animateTextLettersOut(ag, () => ag.remove());
+      }
+      
+      // Create and animate in "op" letters
+      const animatedOP = this.createTextElement(
+        "animated-op",
+        "<span>o</span><span>p</span>"
+      );
+      this.insertAfterStaticDr(pointerText, animatedOP);
+      this.animateTextLettersIn(animatedOP.children, -25);
+    }
 
-  function cleanupExistingTextElements(pointerText) {
-    const existingElements = [
-      pointerText.querySelector(config.selectors.animatedAG),
-      pointerText.querySelector(config.selectors.animatedOP),
-    ];
-
-    existingElements.forEach((el) => el?.remove());
-  }
-
-  function createTextElement(className, innerHTML) {
-    const element = document.createElement("span");
-    element.classList.add(className, "d-inline-flex");
-    element.innerHTML = innerHTML;
-    return element;
-  }
-
-  function animateToDropText(pointerText) {
-    const existingOP = pointerText.querySelector(config.selectors.animatedOP);
-    existingOP?.remove();
-
-    const ag = pointerText.querySelector(config.selectors.animatedAG);
-
-    // Animate out "ag" letters
-    if (ag?.children.length > 0) {
-      gsap.to([...ag.children], {
+    animateTextLettersOut(element, onComplete) {
+      gsap.to([...element.children], {
         y: 25,
         opacity: 0,
-        duration: config.animationDurations.textTransition,
-        stagger: config.animationDurations.textStagger,
+        duration: this.config.animationDurations.textTransition,
+        stagger: this.config.animationDurations.textStagger,
         ease: "power2.in",
-        onComplete: () => ag.remove(),
+        onComplete: onComplete,
       });
     }
 
-    // Create and animate in "op" letters
-    const animatedOP = createTextElement(
-      "animated-op",
-      "<span>o</span><span>p</span>"
-    );
-    insertAfterStaticDr(pointerText, animatedOP);
+    animateTextLettersIn(elements, startY) {
+      gsap.fromTo(
+        elements,
+        { y: startY, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          stagger: this.config.animationDurations.textStagger,
+          ease: "power2.in",
+        }
+      );
+    }
 
-    gsap.fromTo(
-      animatedOP.children,
-      { y: -25, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.4,
-        stagger: config.animationDurations.textStagger,
-        ease: "power2.in",
+    insertAfterStaticDr(pointerText, element) {
+      const staticDr = pointerText.querySelector(this.config.selectors.staticDr);
+      if (staticDr) {
+        staticDr.parentNode.insertBefore(element, staticDr.nextSibling);
+      } else {
+        pointerText.appendChild(element);
       }
-    );
-  }
+    }
 
-  function insertAfterStaticDr(pointerText, element) {
-    const staticDr = pointerText.querySelector(config.selectors.staticDr);
-    if (staticDr) {
-      staticDr.parentNode.insertBefore(element, staticDr.nextSibling);
-    } else {
-      pointerText.appendChild(element);
+    setPointerTextToDrag(pointerText) {
+      const op = pointerText.querySelector(this.config.selectors.animatedOP);
+      const existingAG = pointerText.querySelector(this.config.selectors.animatedAG);
+      
+      // Animate out "op" letters
+      if (op?.children.length > 0) {
+        this.animateTextLettersOut(op, () => op.remove());
+      }
+      
+      // Restore "ag" letters if missing
+      if (!existingAG) {
+        setTimeout(() => {
+          const animatedAG = this.createTextElement(
+            "animated-ag",
+            "<span>a</span><span>g</span>"
+          );
+          pointerText.appendChild(animatedAG);
+          this.animateTextLettersIn(animatedAG.children, 20);
+        }, 150);
+      }
     }
   }
 
-  function setPointerTextToDrag(pointerText) {
-    const op = pointerText.querySelector(config.selectors.animatedOP);
-    const existingAG = pointerText.querySelector(config.selectors.animatedAG);
-
-    // Animate out "op" letters
-    if (op?.children.length > 0) {
-      gsap.to(op.children, {
-        y: -25,
-        opacity: 0,
-        duration: config.animationDurations.textTransition,
-        stagger: config.animationDurations.textStagger,
-        ease: "power2.in",
-        onComplete: () => op.remove(),
-      });
-    }
-
-    // Restore "ag" letters if missing
-    if (!existingAG) {
-      setTimeout(() => {
-        const animatedAG = createTextElement(
-          "animated-ag",
-          "<span>a</span><span>g</span>"
-        );
-        pointerText.appendChild(animatedAG);
-
-        gsap.fromTo(
-          [...animatedAG.children],
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: config.animationDurations.textTransition,
-            stagger: config.animationDurations.textStagger,
-            ease: "power2.out",
-          }
-        );
-      }, 150);
-    }
-  }
+  // Initialize the application
+  new DraggableSliderApp();
 })();
