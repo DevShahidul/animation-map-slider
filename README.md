@@ -72,6 +72,9 @@ This project provides an interactive, animated map and draggable slider for disp
 - **Cross-browser SVG Text:** Displaying circular text in all browsers was challenging. Initially, it worked in Safari but not in Chrome. After debugging, I found the issue was using a `<circle>` tag as a reference path for the text element. Replacing it with a `<path>` tag (drawn using AI tools) resolved the issue for both browsers.
 - **SVG Hover Area:** Changing the fill with an image on hover was inconsistent. Sometimes the SVG path area did not trigger hover/mouseenter events. After extensive debugging, I discovered the issue was setting `fill: none` by default, which caused the hover area to only trigger on the stroke. Setting a default fill color matching the section background resolved this.
 
+### Draggable Slider Section
+- **Custom Pointer Movement:** Initially, the custom cursor pointer wasn't following the mouse coordinates while dragging the slider. Through debugging, I discovered that the pointer's x/y values were only updating on hover events, not during drag operations. The solution came from implementing Swiper Slider's `onSliderMove` API method, which provided accurate pointer coordinates during drag events, successfully resolving the pointer movement issue.
+
 ## Lessons Learned
 
 - Without a fill, the hover area is not triggered.
