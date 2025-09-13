@@ -87,6 +87,7 @@
       width: 70%;
       height: auto;
       stroke: var(--slide-forground);
+      fill: var(--slide-background);
       z-index: -1;
       pointer-events: none;
       opacity: 0.25;
