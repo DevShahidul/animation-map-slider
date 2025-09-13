@@ -494,27 +494,8 @@
     // Kill all existing animations for this area
     killAreaAnimations(elements, index);
 
-    const { path, text, lines, plusIcon, baseCircle, zoomableCircle } =
+    const { text, lines, plusIcon, baseCircle, zoomableCircle } =
       elements;
-
-    // Apply fill effect with proper scaling
-    // if (path && path.id) {
-    //   const bbox = path.getBBox();
-    //   const patternId = `${path.id}-img`;
-    //   const pattern = document.getElementById(patternId);
-
-    //   if (pattern) {
-    //     // Calculate scale to fit the path's bounding box
-    //     const scale = Math.max(bbox.width, bbox.height);
-    //     // Set pattern transform to scale and position relative to the path
-    //     pattern.setAttribute(
-    //       "patternTransform",
-    //       `translate(${bbox.x},${bbox.y}) scale(${scale})`
-    //     );
-
-    //     path.setAttribute("fill", `url(#${patternId})`);
-    //   }
-    // }
 
     // Create enter animations
     const enterAnimations = [];
@@ -812,7 +793,7 @@
       tl.fromTo(activeBg, { x: -96 }, { x: 0, delay: 0.2 }, 0).fromTo(
         activeContent,
         { x: -96 },
-        { x: -24, duration: 2.3, delay: 0.3 },
+        { x: -24, duration: 2.3, delay: 0.5 },
         0
       );
 
