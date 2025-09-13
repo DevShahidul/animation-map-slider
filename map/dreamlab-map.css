@@ -270,19 +270,25 @@
         .circle-zoom{
           fill: var(--dreamlab-map-section-bg);
         }
+        .text{
+          stroke: var(--dreamlab-map-section-bg);
+        }
+        circle:hover{
+          & ~ .text{
+            stroke: var(--dreamlab-cream);
+          }
+        }
       }
       &:hover{
-        &> path{
+        &> path,
+        #Northeast_Region_-_Path > path{
           fill: #94e89b;
         }
       }
-      /* &:hover image{
-                opacity: 1;
-            } */
     }
 
     path {
-      transition: fill 0.3s ease;
+      transition: fill 1s ease;
     }
 
     .indicator {
@@ -377,14 +383,14 @@
       } */
     }
     .map {
-      max-width: 55%;
+      /* max-width: 55%; */
       margin-left: auto;
       margin-right: auto;
-      .map-svg {
+      /* .map-svg {
         margin-left: -40%;
         margin-right: -30%;
         margin-top: -38%;
-      }
+      } */
     }
     .contrller {
       left: auto;
