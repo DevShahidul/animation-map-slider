@@ -8,6 +8,7 @@
   const colorCreem = "#fbe9ba";
 
   let mapSliderSwiperInstance = null;
+  let mapSwiperInitialized = false;
 
   document.addEventListener("DOMContentLoaded", () => {
     const mapSection = document.querySelector(".dreamlab-map-section");
@@ -25,7 +26,18 @@
     if (!closeButton) return;
 
     closeButton.addEventListener("click", function (e) {
-      animateSlider(false); // Close the slider
+      const sliderTimeline = animateSlider(false); // Close the slider
+
+      sliderTimeline.then( () => {        
+        // If a swiper instance already exists, kill it and reinitialize it.
+        if (mapSliderSwiperInstance && mapSliderSwiperInstance.destroy) {
+          mapSliderSwiperInstance.destroy(true, true);
+          mapSliderSwiperInstance = null;
+        }
+
+        mapSwiperInitialized = false;
+      });
+
       body.style.paddingRight = "";
       body.style.overflowY = "auto";
     });
@@ -125,7 +137,7 @@
     // Create timeline for synchronized animations
     const tl = gsap.timeline({
       defaults: {
-        duration: 1,
+        duration: 2,
         ease: "power3.inOut",
       },
     });
@@ -201,16 +213,16 @@
       const body = document.querySelector("body");
       const sliderArea = document.querySelector(".slider-area");
       const isOpen = sliderArea?.classList.contains("active");
-      const scrollbarWidth = getScrollbarWidth();
+      const scrollbarWidth = getScrollbarWidth();     
 
       // Only initialize swiper if it's not already initialized
-      if(!mapSliderSwiperInstance) {
+      if(!mapSliderSwiperInstance) {        
         initializeSwiperSlider();
       }
 
       // Navigate to the corresponding slide before animating
       if (mapSliderSwiperInstance) {
-        mapSliderSwiperInstance.slideToLoop(index); // index from zone-area loop
+        mapSliderSwiperInstance.slideToLoop(index, 0); // index from zone-area loop
       }
 
       // Toggle the slider state and get the GSAP timeline
@@ -225,19 +237,9 @@
           mapSliderSwiperInstance.autoplay.start();
         })
       }
-
-      // sliderTimeline.then(() => {
-      //   // If a swiper instance already exists, kill it and reinitialize it.
-      //   if (window.mySwiperInstance) {
-      //     window.mySwiperInstance.destroy(true, true);
-      //   }
-      // });
-
-
     });
   }
 
-  let mapSwiperInitialized = false;
 
   function initializeSwiperSlider() {
 
@@ -249,22 +251,11 @@
       loop: true,
       speed: 2000,
       autoplay: {
-        delay: 1800,
-        // delay: 5000800,
-        disableOnInteraction: false,
+        // delay: 1800,
+        delay: 5000800,
+        disableOnInteraction: true,
       },
       watchSlidesProgress: true,
-      effect: "creative",
-      creativeEffect: {
-        prev: {
-          translate: ["-100%", 0, 0],
-          opacity: 1,
-        },
-        next: {
-          translate: ["100%", 0, 0],
-          opacity: 1,
-        },
-      },
       on: {
         init: function () {
           // Stop autoplay on init
@@ -276,6 +267,9 @@
 
           const prevIndex = this.previousIndex;
           const prevSlide = slides[prevIndex];
+
+          const container = this.el; // The swiper container
+          const nextSlide = container.querySelector('.swiper-slide-next');
 
           const sliderWrapper = document.getElementById("map-swiper-wrapper");
           sliderWrapper.style.setProperty("--total-slide", slides.length);
@@ -292,7 +286,7 @@
           animateSlideElements(
             activeSlide,
             prevSlide,
-            slides[activeIndex + 1],
+            nextSlide,
             activeIndex,
             this.previousIndex
           );
@@ -310,11 +304,14 @@
           const slides = this.slides;
           const activeIndex = this.activeIndex;
           const prevIndex = this.previousIndex;
-          const nextSlide = slides[activeIndex + 1];
+          // const nextSlide = slides[activeIndex + 1];
 
           const activeSlide = slides[activeIndex];
           const prevSlide = slides[prevIndex];
 
+          const container = this.el; // The swiper container
+          const nextSlide = container.querySelector('.swiper-slide-next');
+        
           animateSlideElements(
             activeSlide,
             prevSlide,
@@ -775,34 +772,28 @@
     const direction = activeIndex > prevIndex ? "forward" : "backward";
 
     const tl = gsap.timeline({
-      defaults: { duration: 1.3, ease: "power3.inOut" },
+      defaults: { duration: 2, ease: "power3.inOut" },
     });
 
     if (direction === "forward") {
-      // Active slide enters from right (x: 24 → 0)
-      tl.fromTo(activeBg, { x: -32 }, { x: -64, delay: 0.2 }, 0).fromTo(
+      tl.fromTo(activeBg, { x: 0 }, { x: -96, delay: 0.2 }, 0).fromTo(
         activeContent,
         { x: 24 },
-        { x: -24, duration: 1.5, delay: 0.3 },
+        { x: -24, duration: 2.3, delay: 0.5 },
         0
       );
 
-      tl.fromTo(
+      gsap.set(
         nextBg,
-        {
-          x: -64,
-        },
         {
           x: 0,
           duration: 0.3,
           delay: 0.6,
           ease: "power3.inOut",
         }
-      ).fromTo(
+      )
+      gsap.set(
         nextContent,
-        {
-          x: -48,
-        },
         {
           x: 24,
           duration: 0.5,
@@ -810,39 +801,32 @@
         }
       );
 
-      // Previous slide exits to left (x: 0 → -24)
       if (prevSlide) {
-        tl.to(prevBg, { x: -64, duration: 0.8 }, 0).to(
+        tl.to(prevBg, { x: -96, duration: 0.8 }, 0).to(
           prevContent,
           { x: -96, duration: 1 },
           0
         );
       }
-    } else if (direction === "backward") {
-      // Active slide enters from left (x: -24 → 0)
-      tl.fromTo(activeBg, { x: -64 }, { x: -32, delay: 0.2 }, 0).fromTo(
+    } else if (direction === "backward") {      
+      tl.fromTo(activeBg, { x: -96 }, { x: 0, delay: 0.2 }, 0).fromTo(
         activeContent,
         { x: -96 },
-        { x: -24, duration: 1.5, delay: 0.3 },
+        { x: -24, duration: 2.3, delay: 0.5 },
         0
       );
 
-      tl.fromTo(
+      gsap.to(
         nextBg,
-        {
-          x: -64,
-        },
         {
           x: 0,
           duration: 0.3,
           delay: 0.6,
           ease: "power3.inOut",
         }
-      ).fromTo(
+      )
+      gsap.to(
         nextContent,
-        {
-          x: -48,
-        },
         {
           x: 24,
           duration: 0.5,
@@ -866,7 +850,6 @@
   // Set current slide number with padding if it's below 10
   function setCurrentSlideNumber(indx, activeSlide) {
     const paddedIndex = indx + 1 < 10 ? `0${indx + 1}` : indx + 1;
-    console.log(indx, activeSlide);
 
     const currentCounter = activeSlide.querySelector(".slider-counter .current");
     if(currentCounter) {
