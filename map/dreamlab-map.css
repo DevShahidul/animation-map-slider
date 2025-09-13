@@ -46,8 +46,11 @@
       pointer-events: none;
     }
   }
+  .slide-inner{
+    overflow-y: auto;
+  }
   .slider-area {
-    width: calc(100% - 2.5rem);
+    width: 100%;
     transform: translateX(100%);
     overflow-x: hidden;
   }
@@ -66,15 +69,15 @@
     padding: var(--padding-y) var(--padding-x);
     position: relative;
     z-index: 3;
-    margin-right: 3.125rem;
-    transform: translateX(2);
+    /* margin-right: 3.125rem; */
+    transform: translateX(1.5rem);
     background-color: var(--slide-background);
     color: var(--slide-forground);
     /* background-image: url('./slider-map-bg.svg');
     background-size: 70%;
     background-position: right bottom 2rem; */
     background-repeat: no-repeat;
-    max-width: 28.5rem;
+    /* max-width: 28.5rem; */
     overflow-x: hidden;
     overflow-y: auto;
     .area-bg {
@@ -235,15 +238,15 @@
     }
   }
   .map-area {
-    .info {
+    /* .info {
       max-width: 20rem;
-    }
+    } */
   }
   .map {
     max-width: 100%;
     .map-svg {
-        margin-left: -5rem;
-        margin-right: -2rem;
+      margin-left: -5rem;
+      margin-right: -2rem;
     }
     svg {
       width: 100%;
@@ -333,7 +336,7 @@
     }
     .slider-area {
       width: calc(100% - 6.5rem);
-    }      
+    }
   }
 }
 
@@ -349,7 +352,7 @@
         font-size: 1rem;
         line-height: 1.75;
       }
-      .info {
+      /* .info {
         width: 25%;
         position: absolute;
         left: 5rem;
@@ -357,7 +360,7 @@
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
-      }
+      } */
     }
     .map {
       max-width: 55%;
@@ -372,7 +375,8 @@
     .contrller {
       left: auto;
       right: 5rem;
-      bottom: 6.25rem;.label {
+      bottom: 6.25rem;
+      .label {
         padding-left: 0;
         padding-right: var(--column-space);
         &::after {
@@ -404,6 +408,12 @@
         gap: 0.5rem;
       }
     }
+    .slide-inner {
+      .row,
+      .slide-content {
+        height: 100%;
+      }
+    }
     .slide-content {
       --padding-x: 2rem;
       --padding-y: 2.25rem;
@@ -430,9 +440,9 @@
         font-size: 1.125rem;
         line-height: 1.75;
       }
-      .info {
+      /* .info {
         width: 33%;
-      }
+      } */
     }
   }
 }

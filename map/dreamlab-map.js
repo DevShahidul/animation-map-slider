@@ -225,15 +225,6 @@
           mapSliderSwiperInstance.autoplay.start();
         })
       }
-
-      // sliderTimeline.then(() => {
-      //   // If a swiper instance already exists, kill it and reinitialize it.
-      //   if (window.mySwiperInstance) {
-      //     window.mySwiperInstance.destroy(true, true);
-      //   }
-      // });
-
-
     });
   }
 
@@ -249,22 +240,11 @@
       loop: true,
       speed: 2000,
       autoplay: {
-        delay: 1800,
-        // delay: 5000800,
-        disableOnInteraction: false,
+        // delay: 1800,
+        delay: 5000800,
+        disableOnInteraction: true,
       },
       watchSlidesProgress: true,
-      effect: "creative",
-      creativeEffect: {
-        prev: {
-          translate: ["-100%", 0, 0],
-          opacity: 1,
-        },
-        next: {
-          translate: ["100%", 0, 0],
-          opacity: 1,
-        },
-      },
       on: {
         init: function () {
           // Stop autoplay on init
@@ -310,11 +290,14 @@
           const slides = this.slides;
           const activeIndex = this.activeIndex;
           const prevIndex = this.previousIndex;
-          const nextSlide = slides[activeIndex + 1];
+          // const nextSlide = slides[activeIndex + 1];
 
           const activeSlide = slides[activeIndex];
           const prevSlide = slides[prevIndex];
 
+          const container = this.el; // The swiper container
+          const nextSlide = container.querySelector('.swiper-slide-next');
+        
           animateSlideElements(
             activeSlide,
             prevSlide,
@@ -779,30 +762,25 @@
     });
 
     if (direction === "forward") {
-      // Active slide enters from right (x: 24 → 0)
-      tl.fromTo(activeBg, { x: -32 }, { x: -64, delay: 0.2 }, 0).fromTo(
+      console.log("Forward sliding..");
+      tl.fromTo(activeBg, { x: 0 }, { x: -64, delay: 0.2 }, 0).fromTo(
         activeContent,
         { x: 24 },
         { x: -24, duration: 1.5, delay: 0.3 },
         0
       );
 
-      tl.fromTo(
+      gsap.set(
         nextBg,
-        {
-          x: -64,
-        },
         {
           x: 0,
           duration: 0.3,
           delay: 0.6,
           ease: "power3.inOut",
         }
-      ).fromTo(
+      )
+      gsap.set(
         nextContent,
-        {
-          x: -48,
-        },
         {
           x: 24,
           duration: 0.5,
@@ -810,7 +788,6 @@
         }
       );
 
-      // Previous slide exits to left (x: 0 → -24)
       if (prevSlide) {
         tl.to(prevBg, { x: -64, duration: 0.8 }, 0).to(
           prevContent,
@@ -819,30 +796,26 @@
         );
       }
     } else if (direction === "backward") {
-      // Active slide enters from left (x: -24 → 0)
-      tl.fromTo(activeBg, { x: -64 }, { x: -32, delay: 0.2 }, 0).fromTo(
+      console.log("Backword sliding..");
+      
+      tl.fromTo(activeBg, { x: -64 }, { x: 0, delay: 0.2 }, 0).fromTo(
         activeContent,
         { x: -96 },
         { x: -24, duration: 1.5, delay: 0.3 },
         0
       );
 
-      tl.fromTo(
+      gsap.to(
         nextBg,
-        {
-          x: -64,
-        },
         {
           x: 0,
           duration: 0.3,
           delay: 0.6,
           ease: "power3.inOut",
         }
-      ).fromTo(
+      )
+      gsap.to(
         nextContent,
-        {
-          x: -48,
-        },
         {
           x: 24,
           duration: 0.5,
