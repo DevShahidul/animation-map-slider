@@ -498,23 +498,23 @@
       elements;
 
     // Apply fill effect with proper scaling
-    if (path && path.id) {
-      const bbox = path.getBBox();
-      const patternId = `${path.id}-img`;
-      const pattern = document.getElementById(patternId);
+    // if (path && path.id) {
+    //   const bbox = path.getBBox();
+    //   const patternId = `${path.id}-img`;
+    //   const pattern = document.getElementById(patternId);
 
-      if (pattern) {
-        // Calculate scale to fit the path's bounding box
-        const scale = Math.max(bbox.width, bbox.height);
-        // Set pattern transform to scale and position relative to the path
-        pattern.setAttribute(
-          "patternTransform",
-          `translate(${bbox.x},${bbox.y}) scale(${scale})`
-        );
+    //   if (pattern) {
+    //     // Calculate scale to fit the path's bounding box
+    //     const scale = Math.max(bbox.width, bbox.height);
+    //     // Set pattern transform to scale and position relative to the path
+    //     pattern.setAttribute(
+    //       "patternTransform",
+    //       `translate(${bbox.x},${bbox.y}) scale(${scale})`
+    //     );
 
-        path.setAttribute("fill", `url(#${patternId})`);
-      }
-    }
+    //     path.setAttribute("fill", `url(#${patternId})`);
+    //   }
+    // }
 
     // Create enter animations
     const enterAnimations = [];

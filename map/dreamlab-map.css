@@ -266,6 +266,16 @@
         transition: opacity 0.5s ease-in-out;
         pointer-events: none;
       }
+      .indicator{
+        .circle-zoom{
+          fill: var(--dreamlab-map-section-bg);
+        }
+      }
+      &:hover{
+        &> path{
+          fill: #94e89b;
+        }
+      }
       /* &:hover image{
                 opacity: 1;
             } */
@@ -295,6 +305,9 @@
   }
   .indicator .plus-icon {
     pointer-events: none;
+    line{
+      stroke: var(--dreamlab-cream);
+    }
   }
   .indicator text.text {
     font-size: 0.75rem;
