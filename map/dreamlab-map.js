@@ -200,12 +200,13 @@
   }
 
   function setupIndicatorClickHandler(area, index) {
-    const indicator = area.querySelector(".indicator");
-    if (!indicator) return;
+    // const indicator = area.querySelector(".indicator");
+    // if (!indicator) return;
+    if (!area) return;
 
     const elements = getAreaElements(area);
 
-    indicator.addEventListener("click", function (e) {
+    area.addEventListener("click", function (e) {
       e.stopPropagation();
       
       handleMouseLeave(elements, index);
@@ -251,8 +252,9 @@
       loop: true,
       speed: 2000,
       autoplay: {
-        // delay: 1800,
-        delay: 5000800,
+        delay: 1800,
+        // delay: 5000800,
+        pauseOnMouseEnter: true,
         disableOnInteraction: true,
       },
       watchSlidesProgress: true,
@@ -370,7 +372,7 @@
 
     if (lines.length > 0) {
       gsap.set(lines, {
-        strokeDashoffset: 12,
+        strokeDashoffset: 8,
       });
     }
 
@@ -517,22 +519,32 @@
       );
     }
 
+    const lineTl = gsap.timeline({
+      default:{
+        duration: 0.5,
+        ease: "power3.out",
+      }
+    })
+
     if (lines.length > 0) {
       lines.forEach((line) => {
         enterAnimations.push(
-          gsap.to(line, {
+          lineTl.to(line, {
             strokeDashoffset: 0,
             duration: 0.5,
             ease: "power3.out",
-          })
+          }, 0)
         );
       });
     }
 
     if (plusIcon) {
       enterAnimations.push(
-        gsap.to(plusIcon, {
-          rotation: -90,
+        gsap.to(plusIcon,
+        {
+          // rotation: -90,
+          rotation: 0,
+          scale: 1,
           duration: 0.5,
           ease: "power3.out",
           transformOrigin: "center center",
@@ -599,7 +611,7 @@
       lines.forEach((line) => {
         leaveAnimations.push(
           gsap.to(line, {
-            strokeDashoffset: 12,
+            strokeDashoffset: 8,
             duration: 0.5,
             ease: "power2.out",
           })
@@ -611,6 +623,7 @@
       leaveAnimations.push(
         gsap.to(plusIcon, {
           rotation: 0,
+          scale: 0.8,
           duration: 0.5,
           ease: "power2.out",
           transformOrigin: "center center",

@@ -281,7 +281,7 @@
       }
       &:hover{
         &> path,
-        #Northeast_Region_-_Path > path{
+        #Northeast_Region_Path > path{
           fill: #94e89b;
         }
       }
@@ -306,7 +306,7 @@
 
   .indicator line {
     stroke: var(--dreamlab-map-section-bg);
-    stroke-width: 2;
+    stroke-width: 1;
     stroke-linecap: round;
   }
   .indicator .plus-icon {
