@@ -46,7 +46,7 @@
       pointer-events: none;
     }
   }
-  .slide-inner{
+  .slide-inner {
     overflow-y: auto;
   }
   .slider-area {
@@ -62,7 +62,27 @@
     left: 0;
     transform: translateX(6rem);
   }
+  .latlong-display {
+    background-color: #0f3b2e; /* dark green background */
+    color: #dcdcdc; /* light gray text */
+    font-family: "Courier New", Courier, monospace;
+    padding: 10px 16px;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1.6;
+    .latlong-line {
+      white-space: nowrap;
+      display: flex;
+      gap: 6px;
+      justify-content: flex-start;
+      align-items: center;
+    }
 
+    .latlong-line span {
+      display: inline-block;
+    }
+  }
   .slide-content {
     --padding-x: 1.5rem;
     --padding-y: 2rem;
@@ -105,7 +125,8 @@
       }
     }
   }
-  .swiper-button-next, .swiper-button-prev{
+  .swiper-button-next,
+  .swiper-button-prev {
     color: var(--dreamlab-orange);
   }
   .text-cream {
@@ -269,22 +290,22 @@
         transition: opacity 0.5s ease-in-out;
         pointer-events: none;
       }
-      .indicator{
-        .circle-zoom{
+      .indicator {
+        .circle-zoom {
           fill: var(--dreamlab-map-section-bg);
         }
-        .text{
+        .text {
           stroke: var(--dreamlab-map-section-bg);
         }
-        circle:hover{
-          & ~ .text{
+        circle:hover {
+          & ~ .text {
             stroke: var(--dreamlab-cream);
           }
         }
       }
-      &:hover{
-        &> path,
-        #Northeast_Region_Path > path{
+      &:hover {
+        & > path,
+        #Northeast_Region_Path > path {
           fill: #94e89b;
         }
       }
@@ -317,7 +338,7 @@
   }
   .indicator .plus-icon {
     pointer-events: none;
-    line{
+    line {
       stroke: var(--dreamlab-cream);
     }
   }
@@ -346,7 +367,7 @@
       background-color: var(--dreamlab-orange);
       color: white;
       border-radius: 0.25rem;
-      &:hover{
+      &:hover {
         background-color: var(--dreamlab-cream);
         color: var(--dreamlab-map-section-bg);
       }
@@ -398,6 +419,11 @@
     }
     .map {
       /* max-width: 55%; */
+      .latlong-display {
+        position: absolute;
+        right: 1rem;
+        top: 2rem;
+      }
       margin-left: auto;
       margin-right: auto;
       /* .map-svg {
