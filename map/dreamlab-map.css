@@ -41,7 +41,7 @@
   }
 
   .map-area {
-    padding: 3rem 10%;
+    padding: 3rem 1rem;
     &:has(~ .slider-area.active) {
       pointer-events: none;
     }
@@ -104,6 +104,9 @@
         fill: var(--slide-forground);
       }
     }
+  }
+  .swiper-button-next, .swiper-button-prev{
+    color: var(--dreamlab-orange);
   }
   .text-cream {
     color: var(--dreamlab-cream);
@@ -245,10 +248,10 @@
   }
   .map {
     max-width: 100%;
-    .map-svg {
+    /* .map-svg {
       margin-left: -5rem;
       margin-right: -2rem;
-    }
+    } */
     svg {
       width: 100%;
       height: auto;
@@ -299,8 +302,11 @@
   }
   .btn-close-slider {
     width: 5rem;
+    transition: color 0.3s ease-in-out, background 0.3s ease-in-out;
     transform: translateY(-10rem);
     left: 4.75rem;
+    background: transparent;
+    color: white;
     z-index: 999999;
   }
 
@@ -336,7 +342,14 @@
 @media screen and (min-width: 48rem) {
   .dreamlab-map-section {
     .btn-close-slider {
-      left: 0;
+      left: 1rem;
+      background-color: var(--dreamlab-orange);
+      color: white;
+      border-radius: 0.25rem;
+      &:hover{
+        background-color: var(--dreamlab-cream);
+        color: var(--dreamlab-map-section-bg);
+      }
     }
     .slide-content {
       margin-left: auto;
@@ -348,7 +361,8 @@
       }
 
       p {
-        max-width: 260px;
+        /* max-width: 260px; */
+        padding-right: 2rem;
         &:last-of-type {
           margin-bottom: 3rem;
         }

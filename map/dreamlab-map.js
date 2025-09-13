@@ -28,7 +28,7 @@
     closeButton.addEventListener("click", function (e) {
       const sliderTimeline = animateSlider(false); // Close the slider
 
-      sliderTimeline.then( () => {        
+      sliderTimeline.then(() => {
         // If a swiper instance already exists, kill it and reinitialize it.
         if (mapSliderSwiperInstance && mapSliderSwiperInstance.destroy) {
           mapSliderSwiperInstance.destroy(true, true);
@@ -208,16 +208,16 @@
 
     area.addEventListener("click", function (e) {
       e.stopPropagation();
-      
+
       handleMouseLeave(elements, index);
 
       const body = document.querySelector("body");
       const sliderArea = document.querySelector(".slider-area");
       const isOpen = sliderArea?.classList.contains("active");
-      const scrollbarWidth = getScrollbarWidth();     
+      const scrollbarWidth = getScrollbarWidth();
 
       // Only initialize swiper if it's not already initialized
-      if(!mapSliderSwiperInstance) {        
+      if (!mapSliderSwiperInstance) {
         initializeSwiperSlider();
       }
 
@@ -233,17 +233,15 @@
       body.style.overflow = "hidden";
 
       // When animation is done, start autoplay
-      if(!isOpen && mapSliderSwiperInstance) {
+      if (!isOpen && mapSliderSwiperInstance) {
         sliderTimeline.eventCallback("onComplete", () => {
           mapSliderSwiperInstance.autoplay.start();
-        })
+        });
       }
     });
   }
 
-
   function initializeSwiperSlider() {
-
     if (mapSwiperInitialized) return;
     mapSwiperInitialized = true;
 
@@ -252,10 +250,14 @@
       loop: true,
       speed: 2000,
       autoplay: {
-        delay: 1800,
-        // delay: 5000800,
+        // delay: 2500,
+        delay: 5000800,
         pauseOnMouseEnter: true,
-        disableOnInteraction: true,
+        disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: "#map-swiper-next",
+        prevEl: "#map-swiper-prev",
       },
       watchSlidesProgress: true,
       on: {
@@ -271,7 +273,7 @@
           const prevSlide = slides[prevIndex];
 
           const container = this.el; // The swiper container
-          const nextSlide = container.querySelector('.swiper-slide-next');
+          const nextSlide = container.querySelector(".swiper-slide-next");
 
           const sliderWrapper = document.getElementById("map-swiper-wrapper");
           sliderWrapper.style.setProperty("--total-slide", slides.length);
@@ -284,7 +286,7 @@
           });
 
           setCurrentSlideNumber(this.realIndex, activeSlide);
-          
+
           animateSlideElements(
             activeSlide,
             prevSlide,
@@ -312,8 +314,8 @@
           const prevSlide = slides[prevIndex];
 
           const container = this.el; // The swiper container
-          const nextSlide = container.querySelector('.swiper-slide-next');
-        
+          const nextSlide = container.querySelector(".swiper-slide-next");
+
           animateSlideElements(
             activeSlide,
             prevSlide,
@@ -334,7 +336,6 @@
     const baseCircle = area.querySelector(".circle");
     const plusIcon = area.querySelector(".plus-icon");
     const zoomableCircle = area.querySelector(".circle-zoom");
-    const text = area.querySelector(".text");
     const lines = area.querySelectorAll("line");
 
     // Return null if essential elements are missing
@@ -349,26 +350,18 @@
       baseCircle,
       plusIcon,
       zoomableCircle,
-      text,
       lines,
     };
   }
 
   function setupInitialStates(elements, index) {
-    const { zoomableCircle, text, lines } = elements;
+    const { zoomableCircle, lines } = elements;
 
     // Set initial states
     gsap.set(zoomableCircle, {
       scale: 0,
       transformOrigin: "center center",
     });
-
-    if (text) {
-      gsap.set(text, {
-        opacity: 0,
-        rotation: 0,
-      });
-    }
 
     if (lines.length > 0) {
       gsap.set(lines, {
@@ -385,7 +378,7 @@
 
   function attachEventListeners(area, elements, index) {
     let hoverTimeout;
-    const { zoomableCircle, text } = elements;
+    const { zoomableCircle } = elements;
     let isIndicatorHovered = false;
 
     // Main area hover events
@@ -457,10 +450,6 @@
           ease: "power2.out",
           transformOrigin: "center center",
         });
-
-        if (text) {
-          text.style.fill = colorGreen; // Change to the dark green color
-        }
       });
 
       zoomableCircle.addEventListener("mouseleave", function (e) {
@@ -496,8 +485,7 @@
     // Kill all existing animations for this area
     killAreaAnimations(elements, index);
 
-    const { text, lines, plusIcon, baseCircle, zoomableCircle } =
-      elements;
+    const { text, lines, plusIcon, baseCircle, zoomableCircle } = elements;
 
     // Create enter animations
     const enterAnimations = [];
@@ -520,28 +508,31 @@
     }
 
     const lineTl = gsap.timeline({
-      default:{
+      default: {
         duration: 0.5,
         ease: "power3.out",
-      }
-    })
+      },
+    });
 
     if (lines.length > 0) {
       lines.forEach((line) => {
         enterAnimations.push(
-          lineTl.to(line, {
-            strokeDashoffset: 0,
-            duration: 0.5,
-            ease: "power3.out",
-          }, 0)
+          lineTl.to(
+            line,
+            {
+              strokeDashoffset: 0,
+              duration: 0.5,
+              ease: "power3.out",
+            },
+            0
+          )
         );
       });
     }
 
     if (plusIcon) {
       enterAnimations.push(
-        gsap.to(plusIcon,
-        {
+        gsap.to(plusIcon, {
           // rotation: -90,
           rotation: 0,
           scale: 1,
@@ -777,23 +768,17 @@
         0
       );
 
-      gsap.set(
-        nextBg,
-        {
-          x: 0,
-          duration: 0.3,
-          delay: 0.6,
-          ease: "power3.inOut",
-        }
-      )
-      gsap.set(
-        nextContent,
-        {
-          x: 24,
-          duration: 0.5,
-          delay: 0.7,
-        }
-      );
+      gsap.set(nextBg, {
+        x: 0,
+        duration: 0.3,
+        delay: 0.6,
+        ease: "power3.inOut",
+      });
+      gsap.set(nextContent, {
+        x: 24,
+        duration: 0.5,
+        delay: 0.7,
+      });
 
       if (prevSlide) {
         tl.to(prevBg, { x: -96, duration: 0.8 }, 0).to(
@@ -802,7 +787,7 @@
           0
         );
       }
-    } else if (direction === "backward") {      
+    } else if (direction === "backward") {
       tl.fromTo(activeBg, { x: -96 }, { x: 0, delay: 0.2 }, 0).fromTo(
         activeContent,
         { x: -96 },
@@ -810,23 +795,17 @@
         0
       );
 
-      gsap.to(
-        nextBg,
-        {
-          x: 0,
-          duration: 0.3,
-          delay: 0.6,
-          ease: "power3.inOut",
-        }
-      )
-      gsap.to(
-        nextContent,
-        {
-          x: 24,
-          duration: 0.5,
-          delay: 0.7,
-        }
-      );
+      gsap.to(nextBg, {
+        x: 0,
+        duration: 0.3,
+        delay: 0.6,
+        ease: "power3.inOut",
+      });
+      gsap.to(nextContent, {
+        x: 24,
+        duration: 0.5,
+        delay: 0.7,
+      });
 
       // Previous slide exits to right (x: 0 → 24)
       if (prevSlide) {
@@ -845,11 +824,13 @@
   function setCurrentSlideNumber(indx, activeSlide) {
     const paddedIndex = indx + 1 < 10 ? `0${indx + 1}` : indx + 1;
 
-    const currentCounter = activeSlide.querySelector(".slider-counter .current");
-    if(currentCounter) {
+    const currentCounter = activeSlide.querySelector(
+      ".slider-counter .current"
+    );
+    if (currentCounter) {
       currentCounter.textContent = paddedIndex;
-    } else{
-        console.warn("Could not find .slider-counter .current in activeSlide");
+    } else {
+      console.warn("Could not find .slider-counter .current in activeSlide");
     }
   }
 
@@ -859,7 +840,7 @@
 
     const totalCounter = slide.querySelector(".slider-counter .total");
 
-    if(totalCounter){
+    if (totalCounter) {
       totalCounter.textContent = paddedTotal;
     } else {
       console.warn("Could not find .slider-counter .total in activeSlide");
