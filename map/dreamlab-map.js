@@ -465,10 +465,6 @@
             ease: "power2.out",
             transformOrigin: "center center",
           });
-
-          if (text) {
-            text.style.fill = colorCreem; // Restore original color
-          }
           return;
         }
 
@@ -485,27 +481,16 @@
     // Kill all existing animations for this area
     killAreaAnimations(elements, index);
 
-    const { text, lines, plusIcon, baseCircle, zoomableCircle } = elements;
+    const {path, lines, plusIcon, baseCircle, zoomableCircle } = elements;
+    // const hoveredFill = '#94e89b';
+
+    // Apply fill effect
+    if (path) {
+       path.setAttribute("fill", '#94e89b');
+    } 
 
     // Create enter animations
     const enterAnimations = [];
-
-    if (text) {
-      enterAnimations.push(
-        gsap.to(text, {
-          opacity: 1,
-          duration: 0.4,
-          ease: "power2.out",
-        }),
-        gsap.to(text, {
-          rotation: "+=360",
-          duration: 25,
-          repeat: -1,
-          ease: "none",
-          transformOrigin: "center center",
-        })
-      );
-    }
 
     const lineTl = gsap.timeline({
       default: {

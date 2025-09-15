@@ -89,15 +89,10 @@
     padding: var(--padding-y) var(--padding-x);
     position: relative;
     z-index: 3;
-    /* margin-right: 3.125rem; */
     transform: translateX(1.5rem);
     background-color: var(--slide-background);
     color: var(--slide-forground);
-    /* background-image: url('./slider-map-bg.svg');
-    background-size: 70%;
-    background-position: right bottom 2rem; */
     background-repeat: no-repeat;
-    /* max-width: 28.5rem; */
     overflow-x: hidden;
     overflow-y: auto;
     .area-bg {
@@ -165,9 +160,6 @@
         background-color: var(--slide-forground);
       }
     }
-    /* .current::after{
-        content: var(--slide-index, 1);
-    } */
   }
   h2 {
     font-size: var(--dreamlab-heading2-size-sm);
@@ -343,7 +335,6 @@
       }
 
       p {
-        /* max-width: 260px; */
         padding-right: 2rem;
         &:last-of-type {
           margin-bottom: 3rem;
@@ -408,9 +399,6 @@
         font-size: 1.125rem;
         line-height: 1.75;
       }
-      /* .info {
-        width: 33%;
-      } */
     }
 
     .contrller {
@@ -466,56 +454,3 @@
     }
   }
 }
-
-/* @media screen and (max-width: 61.9375rem) {
-  .contrller {
-    padding: 1rem 0;
-    .label {
-      padding-left: 0;
-      text-align: center;
-      &::after {
-        display: none;
-      }
-    }
-
-    .nav-controls {
-      display: flex !important;
-      flex-direction: row !important;
-      justify-content: space-around;
-      align-items: center;
-      margin-top: 1rem;
-      padding: 0;
-      font-size: 0.875rem;
-      position: static;
-
-      &::after {
-        display: none;
-      }
-    }
-
-    .nav-control-item {
-      padding: 0.5rem 0.75rem;
-      flex: 1 1 auto;
-      text-align: center;
-      position: relative;
-
-      &::after {
-        display: none !important;
-      }
-
-      .item-label {
-        display: block;
-      }
-
-
-      &.active {
-        --indecator-size: 1.5rem;
-
-        .indecators span:nth-child(2) {
-          width: 2rem;
-        }
-      }
-    }
-  }
-} */
-
