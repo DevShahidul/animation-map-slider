@@ -207,7 +207,6 @@ h5, .h5 {font-size: 1.5rem;}
   /* Content Area - Initially Collapsed */
   .slide-content {
     width: 100%;
-    max-width: var(--item-width, 21.25rem);
     height: 100%;
     padding: 1.125rem;
     padding-right: 0.5rem;
@@ -268,6 +267,9 @@ h5, .h5 {font-size: 1.5rem;}
   .dreamlab-draggable-slider-section {
     --spacing-y: 4rem;
     --space-between-area: 3rem;
+    .slide-content {
+      max-width: var(--item-width, 21.25rem);
+    }
   }
 }
 @media screen and (min-width: 64rem) {
