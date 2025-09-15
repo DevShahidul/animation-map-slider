@@ -190,35 +190,26 @@
   .contrller {
     --column-space: 3rem;
     --indecator-size: 0.5rem;
+    padding: 1rem 0;
     color: var(--dreamlab-light-text);
     .label {
       display: block;
-      padding-left: var(--column-space);
       &::after {
-        content: "";
-        display: block;
-        width: 1.25rem;
-        height: 1px;
-        background: currentColor;
-        margin-top: 0.5rem;
-        margin-left: -0.75rem;
-      }
+          content: "";
+          display: block;
+          width: 1.25rem;
+          height: 1px;
+          background: currentColor;
+          margin-top: 0.25rem;
+          margin-left: -0.5rem;
+        }
     }
     .nav-controls {
       font-size: 1rem;
       line-height: 1.75;
-      &::after {
-        content: "";
-        width: 1px;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        background-color: rgba(255, 255, 255, 0.35);
-      }
     }
     .nav-control-item {
-      padding-left: var(--column-space);
+      padding-right: var(--column-space);
       position: relative;
       cursor: pointer;
       transition: cubic-bezier(0.27, 0.6, 0.62, 0.99) padding 0.7s,
@@ -238,18 +229,6 @@
           }
         }
       }
-      &:not(:last-child) {
-        &::after {
-          content: "";
-          display: block;
-          width: 0.5rem;
-          height: 1px;
-          background: currentColor;
-          position: absolute;
-          left: 0;
-          margin-top: 0;
-        }
-      }
     }
     .indecators {
       left: 0;
@@ -262,17 +241,8 @@
       }
     }
   }
-  .map-area {
-    /* .info {
-      max-width: 20rem;
-    } */
-  }
   .map {
     max-width: 100%;
-    /* .map-svg {
-      margin-left: -5rem;
-      margin-right: -2rem;
-    } */
     svg {
       width: 100%;
       height: auto;
@@ -351,15 +321,6 @@
   }
 }
 
-@media screen and (min-width: 35.5rem) {
-  .dreamlab-map-section {
-    .contrller {
-      position: absolute;
-      left: 1.5rem;
-      bottom: 2rem;
-    }
-  }
-}
 @media screen and (min-width: 48rem) {
   .dreamlab-map-section {
     .btn-close-slider {
@@ -399,7 +360,6 @@
   .dreamlab-map-section {
     .map-area {
       padding: 1rem 5rem;
-      /* min-height: 35rem !important÷; */
       h2 {
         font-size: var(--dreamlab-heading2-size-lg);
       }
@@ -407,66 +367,11 @@
         font-size: 1rem;
         line-height: 1.75;
       }
-      /* .info {
-        width: 25%;
-        position: absolute;
-        left: 5rem;
-        top: 50%;
-        -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-      } */
     }
-    .map {
-      /* max-width: 55%; */
-      .latlong-display {
-        position: absolute;
-        right: 1rem;
-        top: 2rem;
-      }
-      margin-left: auto;
-      margin-right: auto;
-      /* .map-svg {
-        margin-left: -40%;
-        margin-right: -30%;
-        margin-top: -38%;
-      } */
-    }
-    .contrller {
-      left: auto;
-      right: 5rem;
-      bottom: 6.25rem;
-      .label {
-        padding-left: 0;
-        padding-right: var(--column-space);
-        &::after {
-          margin-left: auto;
-          margin-right: -0.75rem;
-        }
-      }
-      .nav-controls {
-        font-size: 1.5rem;
-        &::after {
-          left: auto;
-          right: 0;
-        }
-      }
-      .nav-control-item {
-        padding-left: 0;
-        padding-right: var(--column-space);
-        &:not(:last-child) {
-          &::after {
-            left: auto;
-            right: 0;
-            margin-left: auto;
-          }
-        }
-      }
-      .indecators {
-        left: auto;
-        right: 0;
-        gap: 0.5rem;
-      }
+    .latlong-display {
+      position: absolute;
+      right: 1rem;
+      top: 2rem;
     }
     .slide-inner {
       .row,
@@ -492,6 +397,9 @@
       --padding-x: 3rem;
       --padding-y: 3rem;
     }
+    .map{
+      padding-right: 6rem;
+    }
     .map-area {
       h2 {
         font-size: var(--dreamlab-heading2-size-xl);
@@ -504,17 +412,69 @@
         width: 33%;
       } */
     }
+
+    .contrller {
+      position: absolute;
+      left: auto;
+      right: 5rem;
+      bottom: 6.25rem;
+      padding: 0;
+      .label {
+        padding-left: 0;
+        padding-right: var(--column-space);
+        &::after {
+          margin-top: 0.5rem;
+          margin-left: auto;
+          margin-right: -0.75rem;
+        }
+      }
+      .nav-controls {
+        font-size: 1.5rem;
+        &::after {
+          content: "";
+          width: 1px;
+          height: 100%;
+          position: absolute;
+          left: auto;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(255, 255, 255, 0.35);
+        }
+      }
+      .nav-control-item {
+        padding-left: 0;
+        padding-right: var(--column-space);
+        &:not(:last-child) {
+          &::after {
+            content: "";
+            display: block;
+            width: 0.5rem;
+            height: 1px;
+            background: currentColor;
+            position: absolute;
+            left: auto;
+            right: 0;
+            margin-top: 0;
+          }
+        }
+      }
+      .indecators {
+        left: auto;
+        right: 0;
+        gap: 0.5rem;
+      }
+    }
   }
 }
 
-@media screen and (max-width: 61.9375rem) {
+/* @media screen and (max-width: 61.9375rem) {
   .contrller {
     padding: 1rem 0;
     .label {
       padding-left: 0;
       text-align: center;
       &::after {
-        display: none; /* Hide the decorative line */
+        display: none;
       }
     }
 
@@ -529,7 +489,7 @@
       position: static;
 
       &::after {
-        display: none; /* Hide vertical separator */
+        display: none;
       }
     }
 
@@ -540,28 +500,13 @@
       position: relative;
 
       &::after {
-        display: none !important; /* Hide separator between items */
+        display: none !important;
       }
 
       .item-label {
         display: block;
       }
 
-      .indecators {
-        display: none !important;
-        position: relative;
-        top: auto;
-        left: auto;
-        flex-direction: row !important;
-        justify-content: center;
-        align-items: center;
-        gap: 0.25rem;
-        margin-top: 0.5rem;
-
-        span {
-          height: 2px;
-        }
-      }
 
       &.active {
         --indecator-size: 1.5rem;
@@ -572,5 +517,5 @@
       }
     }
   }
-}
+} */
 
