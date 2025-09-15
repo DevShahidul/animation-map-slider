@@ -68,15 +68,25 @@
   }
 
   function activateNavControl(pathElement) {
-    if (!pathElement || !pathElement.id) return;
+    const idElement = findElementWithId(pathElement);
+    if (!idElement) return;
 
-    const areaId = pathElement.id;
+    const areaId = idElement.id;
     const controlItem = document.querySelector(`[data-area="${areaId}"]`);
 
     if (controlItem) {
       const allControlItems = document.querySelectorAll(".nav-control-item");
       activateControlItem(controlItem, allControlItems);
     }
+  }
+
+  // Helper function to find the id
+  function findElementWithId(el) {
+    while (el && el !== document) {
+      if (el.id) return el;
+      el = el.parentNode;
+    }
+    return null;
   }
 
   function focusMapArea(areaId) {
@@ -481,13 +491,13 @@
     // Kill all existing animations for this area
     killAreaAnimations(elements, index);
 
-    const {path, lines, plusIcon, baseCircle, zoomableCircle } = elements;
+    const { path, lines, plusIcon, baseCircle, zoomableCircle } = elements;
     // const hoveredFill = '#94e89b';
 
     // Apply fill effect
     if (path) {
-       path.setAttribute("fill", '#94e89b');
-    } 
+      path.setAttribute("fill", "#94e89b");
+    }
 
     // Create enter animations
     const enterAnimations = [];
