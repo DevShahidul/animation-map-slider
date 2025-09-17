@@ -1,20 +1,20 @@
 :root {
-  --dreamlab-map-section-bg: #0b3d2a;
-  --dreamlab-green: #9ee9a8;
-  --dreamlab-light-text: #82a293;
-  --dreamlab-light-lime: #bbfbed;
-  --dreamlab-lime: #9eeba6;
-  --dreamlab-blue: #376bdd;
-  --dreamlab-cream: #ffecb3;
-  --dreamlab-orange: #de6436;
+  --animated-map-section-bg: #0b3d2a;
+  --map-green: #9ee9a8;
+  --map-light-text: #82a293;
+  --map-light-lime: #bbfbed;
+  --map-lime: #9eeba6;
+  --map-blue: #376bdd;
+  --map-cream: #ffecb3;
+  --map-orange: #de6436;
 
-  --dreamlab-heading2-size-sm: 1.75rem;
-  --dreamlab-heading2-size-md: 2rem;
-  --dreamlab-heading2-size-lg: 2.5rem;
-  --dreamlab-heading2-size-xl: 3rem;
+  --map-heading2-size-sm: 1.75rem;
+  --map-heading2-size-md: 2rem;
+  --map-heading2-size-lg: 2.5rem;
+  --map-heading2-size-xl: 3rem;
 }
 
-.dreamlab-map-section {
+.animated-map-section {
   color: white;
   max-width: 100vw;
   .w-60 {
@@ -24,16 +24,16 @@
     width: 40%;
   }
   .bg-green {
-    background: var(--dreamlab-map-section-bg);
+    background: var(--animated-map-section-bg);
   }
   .bg-cream {
-    background: var(--dreamlab-cream);
+    background: var(--map-cream);
   }
   .bg-blue {
-    background: var(--dreamlab-blue);
+    background: var(--map-blue);
   }
   .bg-orange {
-    background: var(--dreamlab-orange);
+    background: var(--map-orange);
   }
 
   .z-index-fixed {
@@ -122,19 +122,19 @@
   }
   .swiper-button-next,
   .swiper-button-prev {
-    color: var(--dreamlab-orange);
+    color: var(--map-orange);
   }
   .text-cream {
-    color: var(--dreamlab-cream);
+    color: var(--map-cream);
   }
   .text-green {
-    color: var(--dreamlab-green);
+    color: var(--map-green);
   }
   .text-light-lime {
-    color: var(--dreamlab-light-lime);
+    color: var(--map-light-lime);
   }
   .text-lime {
-    color: var(--dreamlab-lime);
+    color: var(--map-lime);
   }
   .slider-counter {
     margin-bottom: 1.5rem;
@@ -162,7 +162,7 @@
     }
   }
   h2 {
-    font-size: var(--dreamlab-heading2-size-sm);
+    font-size: var(--map-heading2-size-sm);
   }
   p {
     max-width: 21.5rem;
@@ -183,7 +183,7 @@
     --column-space: 3rem;
     --indecator-size: 0.5rem;
     padding: 1rem 0;
-    color: var(--dreamlab-light-text);
+    color: var(--map-light-text);
     .label {
       display: block;
       &::after {
@@ -254,14 +254,14 @@
       }
       .indicator {
         .circle-zoom {
-          fill: var(--dreamlab-map-section-bg);
+          fill: var(--animated-map-section-bg);
         }
         .text {
-          stroke: var(--dreamlab-map-section-bg);
+          stroke: var(--animated-map-section-bg);
         }
         circle:hover {
           & ~ .text {
-            stroke: var(--dreamlab-cream);
+            stroke: var(--map-cream);
           }
         }
       }
@@ -294,14 +294,14 @@
   }
 
   .indicator line {
-    stroke: var(--dreamlab-map-section-bg);
+    stroke: var(--animated-map-section-bg);
     stroke-width: 1;
     stroke-linecap: round;
   }
   .indicator .plus-icon {
     pointer-events: none;
     line {
-      stroke: var(--dreamlab-cream);
+      stroke: var(--map-cream);
     }
   }
   .indicator text.text {
@@ -314,15 +314,15 @@
 }
 
 @media screen and (min-width: 48rem) {
-  .dreamlab-map-section {
+  .animated-map-section {
     .btn-close-slider {
       left: 1rem;
-      background-color: var(--dreamlab-orange);
+      background-color: var(--map-orange);
       color: white;
       border-radius: 0.25rem;
       &:hover {
-        background-color: var(--dreamlab-cream);
-        color: var(--dreamlab-map-section-bg);
+        background-color: var(--map-cream);
+        color: var(--animated-map-section-bg);
       }
     }
     .slide-content {
@@ -348,11 +348,11 @@
 }
 
 @media screen and (min-width: 64rem) {
-  .dreamlab-map-section {
+  .animated-map-section {
     .map-area {
       padding: 1rem 5rem;
       h2 {
-        font-size: var(--dreamlab-heading2-size-lg);
+        font-size: var(--map-heading2-size-lg);
       }
       p {
         font-size: 1rem;
@@ -375,7 +375,7 @@
       --padding-y: 2.25rem;
       .content-inner {
         h2 {
-          font-size: var(--dreamlab-heading2-size-lg);
+          font-size: var(--map-heading2-size-lg);
         }
       }
     }
@@ -383,7 +383,7 @@
 }
 
 @media screen and (min-width: 75rem) {
-  .dreamlab-map-section {
+  .animated-map-section {
     .slide-content {
       --padding-x: 3rem;
       --padding-y: 3rem;
@@ -393,7 +393,7 @@
     }
     .map-area {
       h2 {
-        font-size: var(--dreamlab-heading2-size-xl);
+        font-size: var(--map-heading2-size-xl);
       }
       p {
         font-size: 1.125rem;

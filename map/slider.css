@@ -1,19 +1,19 @@
 :root {
-  --dreamlab-map-section-bg: #0b3d2a;
-  --dreamlab-green: #9ee9a8;
+  --animated-map-section-bg: #0b3d2a;
+  --news-slider-green: #9ee9a8;
 
-  --dreamlab-light-text: #82a293;
-  --dreamlab-light-lime: #bbfbed;
-  --dreamlab-lime: #9eeba6;
-  --dreamlab-blue: #376bdd;
-  --dreamlab-cream: #ffecb3;
-  --dreamlab-orange: #de6436;
-  --dreamlab-slider-section-bg: #efefef;
+  --news-slider-light-text: #82a293;
+  --news-slider-light-lime: #bbfbed;
+  --news-slider-lime: #9eeba6;
+  --news-slider-blue: #376bdd;
+  --news-slider-cream: #ffecb3;
+  --news-slider-orange: #de6436;
+  --news-slider-slider-section-bg: #efefef;
 
-  --dreamlab-heading2-size-sm: 1.75rem;
-  --dreamlab-heading2-size-md: 2rem;
-  --dreamlab-heading2-size-lg: 2.5rem;
-  --dreamlab-heading2-size-xl: 2.75rem;
+  --news-slider-heading2-size-sm: 1.75rem;
+  --news-slider-heading2-size-md: 2rem;
+  --news-slider-heading2-size-lg: 2.5rem;
+  --news-slider-heading2-size-xl: 2.75rem;
 }
 
 h2, .h2 {font-size: calc(1.4rem + 1.8vw);}
@@ -107,12 +107,12 @@ h5, .h5 {font-size: 1.5rem;}
 }
 
 /* Slider area style */
-.dreamlab-draggable-slider-section {
+.draggable-slider-section {
   --spacing-y: 1.5rem;
   --space-between-area: 2rem;
   --slide-item-height: 28rem;
   --slide-item-width: 21.25rem;
-  background-color: var(--dreamlab-slider-section-bg);
+  background-color: var(--news-slider-slider-section-bg);
   padding-top: var(--spacing-y);
   padding-bottom: var(--spacing-y);
   overflow-x: hidden;
@@ -264,7 +264,7 @@ h5, .h5 {font-size: 1.5rem;}
 }
 
 @media screen and (min-width: 48rem) {
-  .dreamlab-draggable-slider-section {
+  .draggable-slider-section {
     --spacing-y: 4rem;
     --space-between-area: 3rem;
     .slide-content {
@@ -273,13 +273,13 @@ h5, .h5 {font-size: 1.5rem;}
   }
 }
 @media screen and (min-width: 64rem) {
-  .dreamlab-draggable-slider-section {
+  .draggable-slider-section {
     --spacing-y: 5.125rem;
     --space-between-area: 5rem;
     .section-lead {
       h2 {
         max-width: 28rem;
-        font-size: var(--dreamlab-heading2-size-lg);
+        font-size: var(--news-slider-heading2-size-lg);
       }
       .content {
         max-width: 24rem;
@@ -316,11 +316,11 @@ h5, .h5 {font-size: 1.5rem;}
 }
 
 @media screen and (min-width: 75rem) {
-  .dreamlab-draggable-slider-section {
+  .draggable-slider-section {
     --space-between-area: 12.25rem;
     .section-lead {
       h2 {
-        font-size: var(--dreamlab-heading2-size-xl);
+        font-size: var(--news-slider-heading2-size-xl);
       }
     }
 

@@ -29,13 +29,13 @@ https://interactivemap-draggableslider.netlify.app
 
 ### Map
 - `map/index.html`: Main HTML structure for the map section.
-- `map/dreamlab-map.js`: Handles map animations, controls, and interactivity.
-- `map/dreamlab-map.css`: Custom styles for the map, info panel, and controls.
+- `map/animated-map.js`: Handles map animations, controls, and interactivity.
+- `map/animated-map.css`: Custom styles for the map, info panel, and controls.
 
 ### Draggable Slider
 - `slider/index.html`: Main HTML structure for the draggable slider section.
-- `slider/dreamlab-slider.js`: Handles slide animations, dragging, pointer movement, and other interactivity.
-- `slider/dreamlab-slider.css`: Custom styles for the slider, counter indicator, tracker, slide content, and custom pointer.
+- `slider/draggable-slider.js`: Handles slide animations, dragging, pointer movement, and other interactivity.
+- `slider/draggable-slider.css`: Custom styles for the slider, counter indicator, tracker, slide content, and custom pointer.
 
 ## Technical Details
 
@@ -68,8 +68,8 @@ https://interactivemap-draggableslider.netlify.app
 
 - Update map areas and indicators in the HTML.
 - Create indicators with circular text using SVG path and text elements.
-- Adjust animation parameters in `dreamlab-map.js`.
-- Modify colors and layout in `dreamlab-map.css`.
+- Adjust animation parameters in `animated-map.js`.
+- Modify colors and layout in `animated-map.css`.
 - Configure autoplay timing and transitions in the slider settings.
 
 ## Main Challenges

@@ -23,7 +23,7 @@
       slide: 0.2,
     },
     selectors: {
-      sliderSection: ".dreamlab-draggable-slider-section",
+      sliderSection: ".draggable-slider-section",
       swiper: ".draggable-swiper-slider",
       pointer: "#pointer",
       pointerText: ".pointer-text",

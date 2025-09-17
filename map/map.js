@@ -11,7 +11,7 @@
   let mapSwiperInitialized = false;
 
   document.addEventListener("DOMContentLoaded", () => {
-    const mapSection = document.querySelector(".dreamlab-map-section");
+    const mapSection = document.querySelector(".animated-map-section");
     if (!mapSection) return;
 
     initializeControls(mapSection);
@@ -137,7 +137,7 @@
   }
 
   function animateSlider(shouldOpen = true) {
-    const mapSection = document.querySelector(".dreamlab-map-section");
+    const mapSection = document.querySelector(".animated-map-section");
     const mapArea = mapSection.querySelector(".map-area");
     const sliderArea = mapSection.querySelector(".slider-area");
     const closeButton = document.querySelector("#btn-close-slider");
